@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>App de Ahorro</title>
+</head>
+
+<style>
+
+    *{
+        padding: 0;
+        margin: 0;
+    }
+
+    html{
+        height: 100vh;
+    }
+
+body {
+    font-family: poppins;
+    /* background: linear-gradient(to right, #42275a, #433d68); */
+    background-color: #433d68;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 32px;
+    margin: 50px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 920px;
+}
+
+.container h1{
+    color: #e4ba8a;
+    font-size: 48px;
+}
+
+.container #reset{
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 20px;
+    background-color: #DC4C64;
+    border-radius: 50px;
+    border: none;
+    color: #FBFBFB;
+}
+
+.ahorro{
+    background-color: #e4ba8a;
+    padding: 32px;
+    border-radius: 32px;
+    display: flex;
+    flex-direction: column;
+    text-align: start;
+}
+
+.ahorro .seccion_botones{
+    display: flex;
+    gap: 16px;
+}
+
+.ahorro p{
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.ahorro #suma{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 48px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.ahorro button {
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 20px;
+    background-color: #433d68;
+    border-radius: 50px;
+    border: none;
+    color: #e4ba8a;
+
+}
+
+#tarjeta {
+    width: 100%;
+    max-width: 300px;
+    height: 150px;
+    background-color: #2d274b;
+    border-radius: 32px;
+    margin-top: 50px;
+    font-size: 32px;
+    font-weight: 800;
+    color: #e4ba8a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#baul {
+    margin-top: 20px;
+    font-size: 18px;
+    padding: 32px;
+}
+
+
+</style>
+
+<body>
+    <div class="container">
+        <h1>Reto <strong>365</strong></h1>
+        <img src="ahorrar-50-mil-pesos-100-dias-removebg-preview.png" alt="" style="width: 50%;">
+        <div class="ahorro">
+            <p>Ahorro:</p>
+        <div id="suma">$0</div>
+        <div class="seccion_botones">
+        <button id="sacarTarjeta">Sacar Tarjeta</button>
+        <button id="verHistorial">Historial</button>
+        </div>
+        </div>
+
+        <div id="tarjeta"></div>
+        <div id="baul"></div>
+        <div id="historial" style="display: none;"></div>
+
+        <button id="reset">Reset</button>
+    </div>
+</body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const sacarTarjetaBtn = document.getElementById('sacarTarjeta');
+    const verHistorialBtn = document.getElementById('verHistorial');
+    const resetBtn = document.getElementById('reset');
+    const sumaDiv = document.getElementById('suma');
+    const tarjetaDiv = document.getElementById('tarjeta');
+    const baulDiv = document.getElementById('baul');
+    const historialDiv = document.getElementById('historial');
+
+    const tarjetas = Array.from({ length: 365 }, (_, index) => index + 1);
+    let tarjetasRestantes = [...tarjetas];
+    let tarjetasSacadas = obtenerTarjetasSacadas() || [];
+
+    actualizarSuma();
+
+    sacarTarjetaBtn.addEventListener('click', function () {
+        if (tarjetasRestantes.length > 0) {
+            const numeroAleatorio = tarjetasRestantes[Math.floor(Math.random() * tarjetasRestantes.length)];
+
+            tarjetaDiv.textContent = `$ ${numeroAleatorio}`;
+            baulDiv.textContent = `Baul: ${numeroAleatorio}`;
+
+            tarjetasSacadas.push(numeroAleatorio);
+            tarjetasRestantes = tarjetasRestantes.filter(tarjeta => tarjeta !== numeroAleatorio);
+
+            guardarTarjetasSacadas();
+            actualizarSuma();
+        } else {
+            tarjetaDiv.textContent = "No hay más tarjetas disponibles.";
+        }
+    });
+
+    verHistorialBtn.addEventListener('click', function () {
+        if (tarjetasSacadas.length > 0) {
+            historialDiv.textContent = `Historial: ${tarjetasSacadas.join(', ')}`;
+            historialDiv.style.display = 'block';
+        } else {
+            historialDiv.textContent = 'No hay tarjetas en el historial.';
+            historialDiv.style.display = 'block';
+        }
+    });
+
+    resetBtn.addEventListener('click', function () {
+        // Reiniciar todas las variables
+        tarjetasRestantes = [...tarjetas];
+        tarjetasSacadas = [];
+        actualizarSuma();
+        tarjetaDiv.textContent = '';
+        baulDiv.textContent = '';
+        historialDiv.textContent = '';
+        historialDiv.style.display = 'none';
+        // Limpiar el historial guardado en localStorage
+        localStorage.removeItem('tarjetasSacadas');
+    });
+
+    function actualizarSuma() {
+        const suma = tarjetasSacadas.reduce((total, numero) => total + numero, 0);
+        sumaDiv.textContent = ` $${suma.toLocaleString()}`;
+    }
+
+    function guardarTarjetasSacadas() {
+        localStorage.setItem('tarjetasSacadas', JSON.stringify(tarjetasSacadas));
+    }
+
+    function obtenerTarjetasSacadas() {
+        const tarjetasSacadasGuardadas = localStorage.getItem('tarjetasSacadas');
+        return tarjetasSacadasGuardadas ? JSON.parse(tarjetasSacadasGuardadas) : null;
+    }
+});
+
+
+
+</script>
+
+
+</html>
