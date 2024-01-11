@@ -22,13 +22,12 @@ body {
     font-family: poppins;
     /* background: linear-gradient(to right, #42275a, #433d68); */
     background-color: #433d68;
-    margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    padding: 32px;
-    margin: 50px;
+    padding: 24px;
+    margin: 40px auto;
 }
 
 .container {
@@ -45,7 +44,6 @@ body {
 }
 
 .container #reset{
-    padding: 16px 32px;
     font-size: 16px;
     font-weight: 600;
     margin-top: 20px;
@@ -53,6 +51,9 @@ body {
     border-radius: 50px;
     border: none;
     color: #FBFBFB;
+    padding: 10px 20px;
+    /* border-radius: 10px; */
+    cursor: pointer;
 }
 
 .ahorro{
@@ -62,10 +63,12 @@ body {
     display: flex;
     flex-direction: column;
     text-align: start;
+    width: 100%;
 }
 
 .ahorro .seccion_botones{
     display: flex;
+    flex-direction: column;
     gap: 16px;
 }
 
@@ -85,6 +88,7 @@ body {
 
 .ahorro button {
     padding: 16px 32px;
+    width: 100%;
     font-size: 16px;
     font-weight: 600;
     margin-top: 20px;
@@ -116,6 +120,55 @@ body {
     padding: 32px;
 }
 
+/* Agrega estilos para el modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+    background-color: rgb(45, 39, 75, 0.9);
+    color: #e4ba8a;
+    border-radius: 10px;
+    padding: 20px;
+    width: 300px;
+    margin: 100px auto;
+    text-align: center;
+}
+
+/* Estilos adicionales para el botón del modal */
+#confirmModal #confirmarReset {
+    background-color: #e4ba8a;
+    margin: 10px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+#confirmModal #cancelarReset {
+    background-color: #ff8686;
+    margin: 10px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 500;
+
+}
+
+/* Responsivo */
+
+@media (min-width: 320px) and (max-width: 768px) {
+    .container {
+    max-width: 280px;
+}
+  }
+
 
 </style>
 
@@ -134,9 +187,18 @@ body {
 
         <div id="tarjeta"></div>
         <div id="baul"></div>
-        <div id="historial" style="display: none;"></div>
+        <div id="historial" style="display: none; color: #e4ba8a"></div>
+        <button id="reset">Reiniciar</button>
 
-        <button id="reset">Reset</button>
+        <!-- Modal de confirmación -->
+        <div id="confirmModal" class="modal">
+            <div class="modal-content">
+                <p>¿Estás seguro que deseas reiniciar tu progreso?</p>
+                <button id="confirmarReset">Confirmar</button>
+                <button id="cancelarReset">Cancelar</button>
+            </div>
+        </div>
+
     </div>
 </body>
 
@@ -145,6 +207,8 @@ body {
     const sacarTarjetaBtn = document.getElementById('sacarTarjeta');
     const verHistorialBtn = document.getElementById('verHistorial');
     const resetBtn = document.getElementById('reset');
+    const confirmarResetBtn = document.getElementById('confirmarReset');
+    const cancelarResetBtn = document.getElementById('cancelarReset');
     const sumaDiv = document.getElementById('suma');
     const tarjetaDiv = document.getElementById('tarjeta');
     const baulDiv = document.getElementById('baul');
@@ -183,8 +247,47 @@ body {
         }
     });
 
+    // resetBtn.addEventListener('click', function () {
+    //     // Reiniciar todas las variables
+    //     tarjetasRestantes = [...tarjetas];
+    //     tarjetasSacadas = [];
+    //     actualizarSuma();
+    //     tarjetaDiv.textContent = '';
+    //     baulDiv.textContent = '';
+    //     historialDiv.textContent = '';
+    //     historialDiv.style.display = 'none';
+    //     // Limpiar el historial guardado en localStorage
+    //     localStorage.removeItem('tarjetasSacadas');
+    // });
+
     resetBtn.addEventListener('click', function () {
-        // Reiniciar todas las variables
+        // Mostrar el modal de confirmación al hacer clic en el botón Reset
+        confirmModal.style.display = 'block';
+    });
+
+    // confirmarResetBtn.addEventListener('click', function () {
+    //     // Resetear todas las variables
+    //     tarjetasRestantes = [...tarjetas];
+    //     tarjetasSacadas = [];
+    //     actualizarSuma();
+    //     tarjetaDiv.textContent = '';
+    //     baulDiv.textContent = '';
+    //     historialDiv.textContent = '';
+    //     historialDiv.style.display = 'none';
+    //     // Limpiar el historial guardado en localStorage
+    //     localStorage.removeItem('tarjetasSacadas');
+
+    //     // Cerrar el modal de confirmación
+    //     confirmModal.style.display = 'none';
+    // });
+
+    cancelarResetBtn.addEventListener('click', function () {
+        // Cerrar el modal de confirmación sin hacer nada
+        confirmModal.style.display = 'none';
+    });
+
+    confirmarResetBtn.addEventListener('click', function () {
+        // Resetear todas las variables
         tarjetasRestantes = [...tarjetas];
         tarjetasSacadas = [];
         actualizarSuma();
@@ -194,6 +297,9 @@ body {
         historialDiv.style.display = 'none';
         // Limpiar el historial guardado en localStorage
         localStorage.removeItem('tarjetasSacadas');
+
+        // Cerrar el modal de confirmación
+        confirmModal.style.display = 'none';
     });
 
     function actualizarSuma() {
