@@ -73,8 +73,8 @@ body {
 }
 
 .ahorro p{
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 24px;
+    font-weight: 700;
 }
 
 .ahorro #suma{
@@ -86,7 +86,12 @@ body {
     margin: 0;
 }
 
-.ahorro button {
+.ahorro #estado{
+    color: #2d274b;
+    font-weight: 600;
+}
+
+.ahorro #sacarTarjeta {
     padding: 16px 32px;
     width: 100%;
     font-size: 16px;
@@ -96,13 +101,25 @@ body {
     border-radius: 50px;
     border: none;
     color: #e4ba8a;
+}
 
+.ahorro #verHistorial {
+    padding: 16px 32px;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 20px;
+    border: solid 2px #2d274b;
+    background-color: transparent;
+    border-radius: 50px;
+    /* border: none; */
+    color: #2d274b;
 }
 
 #tarjeta {
     width: 100%;
     max-width: 300px;
-    height: 150px;
+    height: 120px;
     background-color: #2d274b;
     border-radius: 32px;
     margin-top: 50px;
@@ -177,7 +194,8 @@ body {
         <h1>Reto <strong>365</strong></h1>
         <img src="ahorrar-50-mil-pesos-100-dias-removebg-preview.png" alt="" style="width: 50%;">
         <div class="ahorro">
-            <p>Ahorro:</p>
+            <div id="estado">0 de 365 días</div>
+            <p>Ahorro Total:</p>
         <div id="suma">$0</div>
         <div class="seccion_botones">
         <button id="sacarTarjeta">Sacar Tarjeta</button>
@@ -204,6 +222,7 @@ body {
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+    const estadoDiv = document.getElementById('estado');
     const sacarTarjetaBtn = document.getElementById('sacarTarjeta');
     const verHistorialBtn = document.getElementById('verHistorial');
     const resetBtn = document.getElementById('reset');
@@ -225,7 +244,7 @@ body {
             const numeroAleatorio = tarjetasRestantes[Math.floor(Math.random() * tarjetasRestantes.length)];
 
             tarjetaDiv.textContent = `$ ${numeroAleatorio}`;
-            baulDiv.textContent = `Baul: ${numeroAleatorio}`;
+            baulDiv.textContent = `Ultimo numero: ${numeroAleatorio}`;
 
             tarjetasSacadas.push(numeroAleatorio);
             tarjetasRestantes = tarjetasRestantes.filter(tarjeta => tarjeta !== numeroAleatorio);
@@ -302,10 +321,20 @@ body {
         confirmModal.style.display = 'none';
     });
 
+    // function actualizarSuma() {
+    //     const suma = tarjetasSacadas.reduce((total, numero) => total + numero, 0);
+    //     sumaDiv.textContent = ` $${suma.toLocaleString()}`;
+    // }
+
     function actualizarSuma() {
-        const suma = tarjetasSacadas.reduce((total, numero) => total + numero, 0);
-        sumaDiv.textContent = ` $${suma.toLocaleString()}`;
-    }
+    const suma = tarjetasSacadas.reduce((total, numero) => total + numero, 0);
+    const cantidadDias = tarjetas.length;
+    const diasSacados = tarjetasSacadas.length;
+    const diasRestantes = cantidadDias - diasSacados; // Corregir esta línea
+
+    estadoDiv.textContent = `${diasSacados} de ${cantidadDias} días (quedan ${diasRestantes})`; // Corregir esta línea
+    sumaDiv.textContent = ` $${suma.toLocaleString()}`;
+}
 
     function guardarTarjetasSacadas() {
         localStorage.setItem('tarjetasSacadas', JSON.stringify(tarjetasSacadas));
