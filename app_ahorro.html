@@ -191,7 +191,7 @@ body {
 
 <body>
     <div class="container">
-        <h1>Reto <strong>365</strong></h1>
+        <h1 id="titulo">Reto <strong>365</strong></h1>
         <img src="ahorrar-50-mil-pesos-100-dias-removebg-preview.png" alt="" style="width: 50%;">
         <div class="ahorro">
             <div id="estado">0 de 365 días</div>
@@ -216,9 +216,13 @@ body {
                 <button id="cancelarReset">Cancelar</button>
             </div>
         </div>
-
     </div>
 </body>
+
+
+
+
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -232,6 +236,7 @@ body {
     const tarjetaDiv = document.getElementById('tarjeta');
     const baulDiv = document.getElementById('baul');
     const historialDiv = document.getElementById('historial');
+    const fechaDiv = document.getElementById('fecha');
 
     const tarjetas = Array.from({ length: 365 }, (_, index) => index + 1);
     let tarjetasRestantes = [...tarjetas];
@@ -256,6 +261,48 @@ body {
         }
     });
 
+     // Calcula la fecha actual
+     const hoy = new Date();
+    const dia = hoy.getDate();
+    const mes = hoy.getMonth() + 1;
+    const año = hoy.getFullYear();
+    const fechaActual = `${dia}/${mes}/${año}`;
+    fechaDiv.textContent = `Fecha de hoy: ${fechaActual}`;
+
+    // Función para calcular los días de retraso
+    function calcularDiasRetraso() {
+        const primeraFecha = obtenerPrimerDia();
+        const tiempoPasado = hoy - primeraFecha;
+        const diasPasados = Math.floor(tiempoPasado / (1000 * 60 * 60 * 24));
+        const diasRetraso = diasPasados - tarjetasSacadas.length;
+        return diasRetraso > 0 ? diasRetraso : 0;
+    }
+
+    // Función para obtener la fecha de la primera tarjeta sacada
+    function obtenerPrimerDia() {
+        if (tarjetasSacadas.length > 0) {
+            const fechaPrimerDia = new Date(tarjetasSacadas[0]);
+            fechaPrimerDia.setHours(0, 0, 0, 0);
+            return fechaPrimerDia;
+        }
+        return hoy;
+    }
+
+    // Actualiza el estado
+    function actualizarEstado() {
+        const suma = tarjetasSacadas.reduce((total, numero) => total + numero, 0);
+        const cantidadDias = tarjetas.length;
+        const diasSacados = tarjetasSacadas.length;
+        const diasRestantes = cantidadDias - diasSacados;
+
+        const diasRetraso = calcularDiasRetraso();
+
+        estadoDiv.textContent = `${diasSacados} de ${cantidadDias} días (quedan ${diasRestantes}, retraso: ${diasRetraso})`;
+        sumaDiv.textContent = `Suma: $${suma.toLocaleString()}`;
+    }
+
+
+
     verHistorialBtn.addEventListener('click', function () {
         if (tarjetasSacadas.length > 0) {
             historialDiv.textContent = `Historial: ${tarjetasSacadas.join(', ')}`;
@@ -266,39 +313,12 @@ body {
         }
     });
 
-    // resetBtn.addEventListener('click', function () {
-    //     // Reiniciar todas las variables
-    //     tarjetasRestantes = [...tarjetas];
-    //     tarjetasSacadas = [];
-    //     actualizarSuma();
-    //     tarjetaDiv.textContent = '';
-    //     baulDiv.textContent = '';
-    //     historialDiv.textContent = '';
-    //     historialDiv.style.display = 'none';
-    //     // Limpiar el historial guardado en localStorage
-    //     localStorage.removeItem('tarjetasSacadas');
-    // });
 
     resetBtn.addEventListener('click', function () {
         // Mostrar el modal de confirmación al hacer clic en el botón Reset
         confirmModal.style.display = 'block';
     });
 
-    // confirmarResetBtn.addEventListener('click', function () {
-    //     // Resetear todas las variables
-    //     tarjetasRestantes = [...tarjetas];
-    //     tarjetasSacadas = [];
-    //     actualizarSuma();
-    //     tarjetaDiv.textContent = '';
-    //     baulDiv.textContent = '';
-    //     historialDiv.textContent = '';
-    //     historialDiv.style.display = 'none';
-    //     // Limpiar el historial guardado en localStorage
-    //     localStorage.removeItem('tarjetasSacadas');
-
-    //     // Cerrar el modal de confirmación
-    //     confirmModal.style.display = 'none';
-    // });
 
     cancelarResetBtn.addEventListener('click', function () {
         // Cerrar el modal de confirmación sin hacer nada
@@ -321,10 +341,6 @@ body {
         confirmModal.style.display = 'none';
     });
 
-    // function actualizarSuma() {
-    //     const suma = tarjetasSacadas.reduce((total, numero) => total + numero, 0);
-    //     sumaDiv.textContent = ` $${suma.toLocaleString()}`;
-    // }
 
     function actualizarSuma() {
     const suma = tarjetasSacadas.reduce((total, numero) => total + numero, 0);
@@ -345,7 +361,6 @@ body {
         return tarjetasSacadasGuardadas ? JSON.parse(tarjetasSacadasGuardadas) : null;
     }
 });
-
 
 
 </script>
