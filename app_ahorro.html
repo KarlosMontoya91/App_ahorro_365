@@ -19,9 +19,9 @@
     }
 
 body {
-    font-family: poppins;
+    font-family: monospace;
     /* background: linear-gradient(to right, #42275a, #433d68); */
-    background-color: #433d68;
+    background-color: #0c0d0c;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -39,7 +39,7 @@ body {
 }
 
 .container h1{
-    color: #e4ba8a;
+    color: #dbed4f;
     font-size: 48px;
 }
 
@@ -47,17 +47,17 @@ body {
     font-size: 16px;
     font-weight: 600;
     margin-top: 20px;
-    background-color: #DC4C64;
+    background-color: #f5f5f4;
     border-radius: 50px;
     border: none;
-    color: #FBFBFB;
+    color: #0e0e0e;
     padding: 10px 20px;
     /* border-radius: 10px; */
     cursor: pointer;
 }
 
 .ahorro{
-    background-color: #e4ba8a;
+    background-color: #dbed4f;
     padding: 32px;
     border-radius: 32px;
     display: flex;
@@ -87,7 +87,7 @@ body {
 }
 
 .ahorro #estado{
-    color: #2d274b;
+    color: #0e0e0e;
     font-weight: 600;
 }
 
@@ -97,10 +97,10 @@ body {
     font-size: 16px;
     font-weight: 600;
     margin-top: 20px;
-    background-color: #433d68;
+    background-color: #0e0e0e;
     border-radius: 50px;
     border: none;
-    color: #e4ba8a;
+    color: #fff;
 }
 
 .ahorro #verHistorial {
@@ -109,23 +109,23 @@ body {
     font-size: 16px;
     font-weight: 600;
     margin-top: 20px;
-    border: solid 2px #2d274b;
+    border: solid 2px #0e0e0e;
     background-color: transparent;
     border-radius: 50px;
     /* border: none; */
-    color: #2d274b;
+    color: #0e0e0e;
 }
 
 #tarjeta {
     width: 100%;
     max-width: 300px;
     height: 120px;
-    background-color: #2d274b;
+    background-color: rgb(255, 255, 255, 0.05);
     border-radius: 32px;
     margin-top: 50px;
     font-size: 32px;
     font-weight: 800;
-    color: #e4ba8a;
+    color: #f5f5f4;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -149,8 +149,8 @@ body {
 }
 
 .modal-content {
-    background-color: rgb(45, 39, 75, 0.9);
-    color: #e4ba8a;
+    background-color:#f5f5f4;
+    color: #0e0e0e;
     border-radius: 10px;
     padding: 20px;
     width: 300px;
@@ -160,21 +160,25 @@ body {
 
 /* Estilos adicionales para el botón del modal */
 #confirmModal #confirmarReset {
-    background-color: #e4ba8a;
+    background-color: #f5f5f4;
+    color: #0c0d0c;
     margin: 10px;
     padding: 10px 20px;
+    border: solid 1px #0c0d0c;
     border-radius: 10px;
     cursor: pointer;
     font-weight: 500;
 }
 
 #confirmModal #cancelarReset {
-    background-color: #ff8686;
+    background-color: #0c0d0c;
     margin: 10px;
     padding: 10px 20px;
+    border: solid 0px;
     border-radius: 10px;
     cursor: pointer;
     font-weight: 500;
+    color: #f5f5f4;
 
 }
 
@@ -206,14 +210,15 @@ body {
         </div>
 
         <div id="tarjeta"></div>
-        <div id="baul"></div>
-        <div id="historial" style="display: none; color: #e4ba8a"></div>
+        <div id="baul" style="color: #b6b6b6;"></div>
+        <div id="historial" style="display: none; color: #e7fd54"></div>
         <button id="reset">Reiniciar</button>
 
         <!-- Modal de confirmación -->
         <div id="confirmModal" class="modal">
             <div class="modal-content">
                 <p>¿Estás seguro que deseas reiniciar tu progreso?</p>
+                <br>
                 <button id="confirmarReset">Confirmar</button>
                 <button id="cancelarReset">Cancelar</button>
             </div>
