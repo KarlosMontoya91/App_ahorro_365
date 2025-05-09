@@ -1,376 +1,451 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>App de Ahorro</title>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reto 365 - App de Ahorro</title>
+    <!-- Bootstrap 5.3.3 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <style>
+      :root {
+        --bs-primary: #c5e861;
+        --bs-primary-rgb: 0, 184, 148;
+        --bs-background: #effce0;
+        --bs-secondary: #1b2020;
+        --bs-secondary-rgb: 45, 52, 54;
+      }
 
-<style>
+      body {
+        background-color: var(--bs-background);
+        font-family: consolas;
+      }
 
-    *{
-        padding: 0;
+      .app-container {
+        max-width: 600px;
+        border-radius: 20px;
+        padding: 32px;
+        overflow: hidden;
+        background-color: var(--bs-background);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+      }
+
+      .header {
+        display: flex;
+        width: 100%;
+        padding: 16px;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 16px 0;
+      }
+
+      .header .avatar {
+        width: 80px;
+        height: 80px;
+        border: solid 2px;
+        border-color: darkseagreen;
+        border-radius: 50px;
+      }
+
+      .header .avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50px;
+        object-fit: cover;
+        object-position: top;
+      }
+
+      .header-text {
+        /* background: linear-gradient(135deg, var(--bs-primary), #00d2b5); */
+        display: flex;
+        flex-direction: column;
+      }
+
+      .datos_ahorro{
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+      } 
+
+      .progreso {
+        background-color: #c5e861;
+        border-radius: 35px;
+        padding: 32px;
+      }
+
+      .progreso #progressText,
+      .progreso #remainingText {
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .progress-thin {
+        height: 10px;
+      }
+
+      .progress-bar {
+        background: var(--bs-secondary) !important;
+      }
+
+      .ahorro {
+        padding: 32px;
+        display: flex;
+        background-color: var(--bs-secondary);
+        border-radius: 35px;
+        color: white;
+        flex-direction: column;
+        gap:8px;
+      }
+
+      .ahorro h1 {
+        font-size: 48px;
+      }
+
+      .ahorro p {
+        font-size: 24px;
+        color: white;
         margin: 0;
-    }
+      }
 
-    html{
-        height: 100vh;
-    }
+      .ahorro .botones{
+        flex-direction: column;
+      }
 
-body {
-    font-family: monospace;
-    /* background: linear-gradient(to right, #42275a, #433d68); */
-    background-color: #0c0d0c;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    padding: 24px;
-    margin: 40px auto;
-}
+      .botones .boton_primario{
+        background-color: var(--bs-primary) !important;
+        color: var(--bs-secondary) !important;
+        border: none !important;
+        border-radius: 35px !important;
+        min-height: 50px !important;
+        font-weight: 600;
+      }
 
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    max-width: 920px;
-}
+      .botones .boton_secundario{
+        color: var(--bs-primary) !important;
+        border-color: var(--bs-primary) !important;
+        border-radius: 35px !important;
+        min-height: 50px !important;
+        font-weight: 600;
+      }
 
-.container h1{
-    color: #dbed4f;
-    font-size: 48px;
-}
+      .botones .boton_secundario:hover{
+        background-color: var(--bs-primary);
+        color: var(--bs-secondary) !important;
+        border-color: var(--bs-primary) !important;
+        border-radius: 35px !important;
+        min-height: 50px !important;
+      }
 
-.container #reset{
-    font-size: 16px;
-    font-weight: 600;
-    margin-top: 20px;
-    background-color: #f5f5f4;
-    border-radius: 50px;
-    border: none;
-    color: #0e0e0e;
-    padding: 10px 20px;
-    /* border-radius: 10px; */
-    cursor: pointer;
-}
+      .card-display {
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        font-weight: 700;
+        background-color: #f0f5f5;
+      }
 
-.ahorro{
-    background-color: #dbed4f;
-    padding: 32px;
-    border-radius: 32px;
-    display: flex;
-    flex-direction: column;
-    text-align: start;
-    width: 100%;
-}
+      #lastNumber {
+        font-size: 24px;
+        font-weight: 600;
+      }
 
-.ahorro .seccion_botones{
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
+      /* .slide-action {
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
 
-.ahorro p{
-    font-size: 24px;
-    font-weight: 700;
-}
+      .slide-action:hover {
+        background-color: #00a884 !important;
+      } */
 
-.ahorro #suma{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    font-size: 48px;
-    font-weight: 700;
-    margin: 0;
-}
+      .modal-body{
+        background-color: var(--bs-secondary);
+        color: white;
+        max-height: 500px;
+        overflow: auto;
+      }
 
-.ahorro #estado{
-    color: #0e0e0e;
-    font-weight: 600;
-}
+      .history-item {
+        border-bottom: 1px solid #dee2e6;
+        padding: 0.75rem 0;
+      }
 
-.ahorro #sacarTarjeta {
-    padding: 16px 32px;
-    width: 100%;
-    font-size: 16px;
-    font-weight: 600;
-    margin-top: 20px;
-    background-color: #0e0e0e;
-    border-radius: 50px;
-    border: none;
-    color: #fff;
-}
+      .history-item:last-child {
+        border-bottom: none;
+      }
 
-.ahorro #verHistorial {
-    padding: 16px 32px;
-    width: 100%;
-    font-size: 16px;
-    font-weight: 600;
-    margin-top: 20px;
-    border: solid 2px #0e0e0e;
-    background-color: transparent;
-    border-radius: 50px;
-    /* border: none; */
-    color: #0e0e0e;
-}
+      .history-modal .modal-header {
+        background: var(--bs-secondary);
+        color: var(--bs-primary);
+      }
 
-#tarjeta {
-    width: 100%;
-    max-width: 300px;
-    height: 120px;
-    background-color: rgb(255, 255, 255, 0.05);
-    border-radius: 32px;
-    margin-top: 50px;
-    font-size: 32px;
-    font-weight: 800;
-    color: #f5f5f4;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+      .area_boton_historial {
+        background: var(--bs-secondary);
+        padding: 16px;
+        text-align: center;
+      }
 
-#baul {
-    margin-top: 20px;
-    font-size: 18px;
-    padding: 32px;
-}
+      .area_boton_historial .boton_historial {
+        background: var(--bs-primary);
+        color: var(--bs-secondary);
+        border-radius: 35px !important;
+        border: none !important;
+        padding: 16px 32px !important;
+      }
+    </style>
+  </head>
+  <body class="d-flex justify-content-center align-items-center min-vh-100 p-3">
+    <div class="app-container w-100">
+      <!-- Header -->
+      <div class="header">
+        <div class="avatar">
+          <img src="img_perfil.png" alt="imagen de perfil">
+        </div>
+        <div class="header-text">
+          <h1 class="h4 mb-1 fw-bold">Bienvenido</h1>
+          <p class="small opacity-85 mb-0" id="currentDate">Hoy: 10/5/2025</p>
+        </div>
+      </div>
 
-/* Agrega estilos para el modal */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
-.modal-content {
-    background-color:#f5f5f4;
-    color: #0e0e0e;
-    border-radius: 10px;
-    padding: 20px;
-    width: 300px;
-    margin: 100px auto;
-    text-align: center;
-}
-
-/* Estilos adicionales para el botón del modal */
-#confirmModal #confirmarReset {
-    background-color: #f5f5f4;
-    color: #0c0d0c;
-    margin: 10px;
-    padding: 10px 20px;
-    border: solid 1px #0c0d0c;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 500;
-}
-
-#confirmModal #cancelarReset {
-    background-color: #0c0d0c;
-    margin: 10px;
-    padding: 10px 20px;
-    border: solid 0px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 500;
-    color: #f5f5f4;
-
-}
-
-/* Responsivo */
-
-@media (min-width: 320px) and (max-width: 768px) {
-    .container {
-    max-width: 280px;
-}
-  }
-
-
-</style>
-
-<body>
-    <div class="container">
-        <h1 id="titulo">Reto <strong>365</strong></h1>
-        <img src="ahorrar-50-mil-pesos-100-dias-removebg-preview.png" alt="" style="width: 50%;">
-        <div class="ahorro">
-            <div id="fecha"></div>
-            <br>
-            <div id="estado">0 de 365 días</div>
-            <p>Ahorro Total:</p>
-        <div id="suma">$0</div>
-        <div class="seccion_botones">
-        <button id="sacarTarjeta">Sacar Tarjeta</button>
-        <button id="verHistorial">Historial</button>
+      <div class="datos_ahorro">
+        <!-- Progreso -->
+      <div class="progreso">
+        <div class="d-flex justify-content-between mb-2 small">
+          <div class="progreso_numero">
+            <p class="mb-0">Progreso:</p>
+          <span id="progressText">0 de 365 días</span>
+        </div>
+        <div class="completado">
+          <p class="mb-0">Completado:</p>
+          <span id="remainingText">Quedan 365</span>
         </div>
         </div>
-
-        <div id="tarjeta"></div>
-        <div id="baul" style="color: #b6b6b6;"></div>
-        <div id="historial" style="display: none; color: #e7fd54"></div>
-        <button id="reset">Reiniciar</button>
-
-        <!-- Modal de confirmación -->
-        <div id="confirmModal" class="modal">
-            <div class="modal-content">
-                <p>¿Estás seguro que deseas reiniciar tu progreso?</p>
-                <br>
-                <button id="confirmarReset">Confirmar</button>
-                <button id="cancelarReset">Cancelar</button>
-            </div>
+        <div class="progress progress-thin">
+          <div
+            id="progressBar"
+            class="progress-bar bg-primary"
+            role="progressbar"
+            style="width: 0%"
+          ></div>
         </div>
+      </div>
+
+      <!-- Ahorro Total -->
+      <div class="ahorro text-start">
+        <p>Ahorro Total:</p>
+        <h1 id="totalSavings" class="fw-bold mb-3">$0</h1>
+        <div class="botones d-flex gap-3">
+          <button id="drawCard" class="boton_primario btn btn-primary flex-grow-1 py-2">
+            Sacar Tarjeta
+          </button>
+          <button  id="showHistory"  class="boton_secundario btn btn-outline-primary flex-grow-1 py-2">
+            Historial
+          </button>
+        </div>
+      </div>
+      </div>
+
+      <!-- Tarjeta -->
+      <div id="cardDisplay" class="card-display rounded-3 mx-3 my-4"></div>
+      <p id="lastNumber" class="text-center text-muted small mb-3"></p>
+
+      <!-- Slide Action -->
+      <div  id="slideAction"  class="slide-action bg-primary text-white p-3 mx-3 mb-3 rounded-3 d-flex justify-content-between" style="display: none !important;">
+        <span>Desliza para guardar</span>
+        <span><i class="bi bi-chevron-double-right"></i></span>
+      </div>
+
+      <!-- Botón Reiniciar -->
+      <button id="resetBtn" class="btn btn-link text-danger w-100 py-2 mb-2">
+        Reiniciar Progreso
+      </button>
     </div>
-</body>
 
+    <!-- Modal Historial -->
+    <div class="modal fade history-modal" id="historyModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal_historial modal-content overflow-hidden">
+          <div class="modal-header border-0">
+            <h5 class="modal-title">Historial de Ahorros</h5>
+            <button type="button"  class="btn-close btn-close-white"  data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body p-0">
+            <div id="historyList" class="px-3"></div>
+          </div>
+          <div class="area_boton_historial">
+            <button class="boton_historial btn-primary rounded-0 py-3" data-bs-dismiss="modal">
+              Cerrar Historial
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <!-- Modal Confirmación Reinicio -->
+    <div class="modal fade" id="confirmModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Confirmar Reinicio</h5>
+            <button  type="button" class="btn-close"  data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            ¿Estás seguro que deseas reiniciar tu progreso? Todos tus datos se
+            perderán.
+          </div>
+          <div class="modal-footer">
+            <button  type="button"  class="btn btn-secondary"  data-bs-dismiss="modal" >
+              Cancelar
+            </button>
+            <button id="confirmReset" type="button" class="btn btn-danger">
+              Reiniciar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <!-- Bootstrap 5.3.3 JS Bundle con Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Elementos del DOM
+        const currentDateEl = document.getElementById("currentDate");
+        const progressTextEl = document.getElementById("progressText");
+        const remainingTextEl = document.getElementById("remainingText");
+        const progressBarEl = document.getElementById("progressBar");
+        const totalSavingsEl = document.getElementById("totalSavings");
+        const drawCardBtn = document.getElementById("drawCard");
+        const showHistoryBtn = document.getElementById("showHistory");
+        const cardDisplayEl = document.getElementById("cardDisplay");
+        const lastNumberEl = document.getElementById("lastNumber");
+        const slideActionBtn = document.getElementById("slideAction");
+        const resetBtn = document.getElementById("resetBtn");
+        const historyListEl = document.getElementById("historyList");
+        const confirmResetBtn = document.getElementById("confirmReset");
 
+        // Modales de Bootstrap
+        const historyModal = new bootstrap.Modal("#historyModal");
+        const confirmModal = new bootstrap.Modal("#confirmModal");
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const estadoDiv = document.getElementById('estado');
-    const sacarTarjetaBtn = document.getElementById('sacarTarjeta');
-    const verHistorialBtn = document.getElementById('verHistorial');
-    const resetBtn = document.getElementById('reset');
-    const confirmarResetBtn = document.getElementById('confirmarReset');
-    const cancelarResetBtn = document.getElementById('cancelarReset');
-    const sumaDiv = document.getElementById('suma');
-    const tarjetaDiv = document.getElementById('tarjeta');
-    const baulDiv = document.getElementById('baul');
-    const historialDiv = document.getElementById('historial');
-    const fechaDiv = document.getElementById('fecha');
+        // Datos de la aplicación
+        const cards = Array.from({ length: 365 }, (_, i) => i + 1);
+        let remainingCards = [...cards];
+        let drawnCards = JSON.parse(localStorage.getItem("drawnCards")) || [];
 
-    const tarjetas = Array.from({ length: 365 }, (_, index) => index + 1);
-    let tarjetasRestantes = [...tarjetas];
-    let tarjetasSacadas = obtenerTarjetasSacadas() || [];
+        // Inicializar aplicación
+        updateDate();
+        updateProgress();
+        updateTotalSavings();
 
-    actualizarSuma();
+        // Event Listeners
+        drawCardBtn.addEventListener("click", drawCard);
+        slideActionBtn.addEventListener("click", drawCard);
+        showHistoryBtn.addEventListener("click", showHistory);
+        resetBtn.addEventListener("click", () => confirmModal.show());
+        confirmResetBtn.addEventListener("click", resetProgress);
 
-    sacarTarjetaBtn.addEventListener('click', function () {
-        if (tarjetasRestantes.length > 0) {
-            const numeroAleatorio = tarjetasRestantes[Math.floor(Math.random() * tarjetasRestantes.length)];
-
-            tarjetaDiv.textContent = `$ ${numeroAleatorio}`;
-            baulDiv.textContent = `Ultimo numero: ${numeroAleatorio}`;
-
-            tarjetasSacadas.push(numeroAleatorio);
-            tarjetasRestantes = tarjetasRestantes.filter(tarjeta => tarjeta !== numeroAleatorio);
-
-            guardarTarjetasSacadas();
-            actualizarSuma();
-        } else {
-            tarjetaDiv.textContent = "No hay más tarjetas disponibles.";
+        // Funciones
+        function updateDate() {
+          const today = new Date();
+          currentDateEl.textContent = `Hoy: ${today.getDate()}/${
+            today.getMonth() + 1
+          }/${today.getFullYear()}`;
         }
-    });
 
-     // Calcula la fecha actual
-     const hoy = new Date();
-    const dia = hoy.getDate();
-    const mes = hoy.getMonth() + 1;
-    const año = hoy.getFullYear();
-    const fechaActual = `${dia}/${mes}/${año}`;
-    fechaDiv.textContent = `Fecha de hoy: ${fechaActual}`;
+        function updateProgress() {
+          const drawnCount = drawnCards.length;
+          const remainingCount = cards.length - drawnCount;
+          const progressPercent = (drawnCount / cards.length) * 100;
 
-    // Función para calcular los días de retraso
-    function calcularDiasRetraso() {
-        const primeraFecha = obtenerPrimerDia();
-        const tiempoPasado = hoy - primeraFecha;
-        const diasPasados = Math.floor(tiempoPasado / (1000 * 60 * 60 * 24));
-        const diasRetraso = diasPasados - tarjetasSacadas.length;
-        return diasRetraso > 0 ? diasRetraso : 0;
-    }
-
-    // Función para obtener la fecha de la primera tarjeta sacada
-    function obtenerPrimerDia() {
-        if (tarjetasSacadas.length > 0) {
-            const fechaPrimerDia = new Date(tarjetasSacadas[0]);
-            fechaPrimerDia.setHours(0, 0, 0, 0);
-            return fechaPrimerDia;
+          progressTextEl.textContent = `${drawnCount} de ${cards.length} días`;
+          remainingTextEl.textContent = `Quedan ${remainingCount}`;
+          progressBarEl.style.width = `${progressPercent}%`;
         }
-        return hoy;
-    }
 
-    // Actualiza el estado
-    function actualizarEstado() {
-        const suma = tarjetasSacadas.reduce((total, numero) => total + numero, 0);
-        const cantidadDias = tarjetas.length;
-        const diasSacados = tarjetasSacadas.length;
-        const diasRestantes = cantidadDias - diasSacados;
-
-        const diasRetraso = calcularDiasRetraso();
-
-        estadoDiv.textContent = `${diasSacados} de ${cantidadDias} días (quedan ${diasRestantes}, retraso: ${diasRetraso})`;
-        sumaDiv.textContent = `Suma: $${suma.toLocaleString()}`;
-    }
-
-
-
-    verHistorialBtn.addEventListener('click', function () {
-        if (tarjetasSacadas.length > 0) {
-            historialDiv.textContent = `Historial: ${tarjetasSacadas.join(', ')}`;
-            historialDiv.style.display = 'block';
-        } else {
-            historialDiv.textContent = 'No hay tarjetas en el historial.';
-            historialDiv.style.display = 'block';
+        function updateTotalSavings() {
+          const total = drawnCards.reduce((sum, num) => sum + num, 0);
+          totalSavingsEl.textContent = `$${total.toLocaleString()}`;
         }
-    });
 
+        function drawCard() {
+          if (remainingCards.length === 0) {
+            cardDisplayEl.textContent = "¡Reto completado!";
+            cardDisplayEl.classList.add("bg-primary", "text-white");
+            return;
+          }
 
-    resetBtn.addEventListener('click', function () {
-        // Mostrar el modal de confirmación al hacer clic en el botón Reset
-        confirmModal.style.display = 'block';
-    });
+          // Seleccionar número aleatorio
+          const randomIndex = Math.floor(Math.random() * remainingCards.length);
+          const drawnNumber = remainingCards[randomIndex];
 
+          // Animación
+          cardDisplayEl.style.transform = "scale(0.9)";
+          setTimeout(() => {
+            cardDisplayEl.textContent = `$${drawnNumber}`;
+            cardDisplayEl.style.transform = "scale(1)";
+          }, 200);
 
-    cancelarResetBtn.addEventListener('click', function () {
-        // Cerrar el modal de confirmación sin hacer nada
-        confirmModal.style.display = 'none';
-    });
+          // Actualizar datos
+          drawnCards.push(drawnNumber);
+          remainingCards = remainingCards.filter((n) => n !== drawnNumber);
+          lastNumberEl.textContent = `Último número: ${drawnNumber}`;
 
-    confirmarResetBtn.addEventListener('click', function () {
-        // Resetear todas las variables
-        tarjetasRestantes = [...tarjetas];
-        tarjetasSacadas = [];
-        actualizarSuma();
-        tarjetaDiv.textContent = '';
-        baulDiv.textContent = '';
-        historialDiv.textContent = '';
-        historialDiv.style.display = 'none';
-        // Limpiar el historial guardado en localStorage
-        localStorage.removeItem('tarjetasSacadas');
+          // Guardar y actualizar UI
+          saveProgress();
+          updateProgress();
+          updateTotalSavings();
+        }
 
-        // Cerrar el modal de confirmación
-        confirmModal.style.display = 'none';
-    });
+        function showHistory() {
+          historyListEl.innerHTML = "";
 
+          if (drawnCards.length === 0) {
+            historyListEl.innerHTML =
+              '<div class="py-3 text-center text-muted">No hay historial disponible</div>';
+          } else {
+            drawnCards.forEach((num, idx) => {
+              const item = document.createElement("div");
+              item.className = "history-item d-flex justify-content-between";
+              item.innerHTML = `
+                            <span>Día ${idx + 1}</span>
+                            <span class="fw-bold">$${num}</span>
+                        `;
+              historyListEl.appendChild(item);
+            });
+          }
 
-    function actualizarSuma() {
-    const suma = tarjetasSacadas.reduce((total, numero) => total + numero, 0);
-    const cantidadDias = tarjetas.length;
-    const diasSacados = tarjetasSacadas.length;
-    const diasRestantes = cantidadDias - diasSacados; // Corregir esta línea
+          historyModal.show();
+        }
 
-    estadoDiv.textContent = `${diasSacados} de ${cantidadDias} días (quedan ${diasRestantes})`; // Corregir esta línea
-    sumaDiv.textContent = ` $${suma.toLocaleString()}`;
-}
+        function resetProgress() {
+          drawnCards = [];
+          remainingCards = [...cards];
+          cardDisplayEl.textContent = "";
+          cardDisplayEl.classList.remove("bg-primary", "text-white");
+          lastNumberEl.textContent = "";
 
-    function guardarTarjetasSacadas() {
-        localStorage.setItem('tarjetasSacadas', JSON.stringify(tarjetasSacadas));
-    }
+          saveProgress();
+          updateProgress();
+          updateTotalSavings();
 
-    function obtenerTarjetasSacadas() {
-        const tarjetasSacadasGuardadas = localStorage.getItem('tarjetasSacadas');
-        return tarjetasSacadasGuardadas ? JSON.parse(tarjetasSacadasGuardadas) : null;
-    }
-});
+          confirmModal.hide();
+        }
 
-
-</script>
-
-
+        function saveProgress() {
+          localStorage.setItem("drawnCards", JSON.stringify(drawnCards));
+        }
+      });
+    </script>
+  </body>
 </html>
