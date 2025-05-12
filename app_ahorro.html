@@ -14,6 +14,9 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
       :root {
         --bs-primary: #c5e861;
@@ -29,60 +32,59 @@
       }
 
       /* pantalla de bienvenida */
-      
-    .splash-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: var(--bs-primary); /* color primario de Bootstrap */
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 1050;
-      color: var(--bs-secondary);
-      animation: fadeOut 1s ease-in-out 2s forwards; 
-    }
-
-    .splash-screen h1 {
-      font-size: 4rem;
-      animation: zoomIn 1s ease;
-      margin:0;
-    }
-
-    .splash-screen .text_numero_inicial{
-      font-size: 15rem !important; 
-      font-weight: 900 !important;
-    } 
-
-    @keyframes zoomIn {
-      from {
-        opacity: 0;
-        transform: scale(0.8);
+      .splash-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--bs-primary);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 1050;
+        color: var(--bs-secondary);
+        animation: fadeOut 1s ease-in-out 2s forwards;
       }
-      to {
-        opacity: 1;
-        transform: scale(1);
+
+      .splash-screen h1 {
+        font-size: 4rem;
+        animation: zoomIn 1s ease;
+        margin: 0;
       }
-    }
 
-    @keyframes fadeOut {
-      to {
-        opacity: 0;
-        visibility: hidden;
+      .splash-screen .text_numero_inicial {
+        font-size: 15rem !important;
+        font-weight: 900 !important;
       }
-    }
 
-    .main-content {
-      display: none;
-    }
+      @keyframes zoomIn {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
 
-    body.loaded .main-content {
-      display: block;
-      padding: 2rem;
-    }
+      @keyframes fadeOut {
+        to {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
+
+      .main-content {
+        display: none;
+      }
+
+      body.loaded .main-content {
+        display: block;
+        padding: 2rem;
+      }
 
       .app-container {
         max-width: 600px;
@@ -119,16 +121,15 @@
       }
 
       .header-text {
-        /* background: linear-gradient(135deg, var(--bs-primary), #00d2b5); */
         display: flex;
         flex-direction: column;
       }
 
-      .datos_ahorro{
+      .datos_ahorro {
         display: flex;
         flex-direction: column;
         gap: 32px;
-      } 
+      }
 
       .progreso {
         background-color: #c5e861;
@@ -157,7 +158,7 @@
         border-radius: 35px;
         color: white;
         flex-direction: column;
-        gap:8px;
+        gap: 8px;
       }
 
       .ahorro h1 {
@@ -170,11 +171,11 @@
         margin: 0;
       }
 
-      .ahorro .botones{
+      .ahorro .botones {
         flex-direction: column;
       }
 
-      .botones .boton_primario{
+      .botones .boton_primario {
         background-color: var(--bs-primary) !important;
         color: var(--bs-secondary) !important;
         border: none !important;
@@ -183,7 +184,7 @@
         font-weight: 600;
       }
 
-      .botones .boton_secundario{
+      .botones .boton_secundario {
         color: var(--bs-primary) !important;
         border-color: var(--bs-primary) !important;
         border-radius: 35px !important;
@@ -191,7 +192,7 @@
         font-weight: 600;
       }
 
-      .botones .boton_secundario:hover{
+      .botones .boton_secundario:hover {
         background-color: var(--bs-primary);
         color: var(--bs-secondary) !important;
         border-color: var(--bs-primary) !important;
@@ -214,16 +215,7 @@
         font-weight: 600;
       }
 
-      /* .slide-action {
-        cursor: pointer;
-        transition: all 0.2s ease;
-      }
-
-      .slide-action:hover {
-        background-color: #00a884 !important;
-      } */
-
-      .modal-body{
+      .modal-body {
         background-color: var(--bs-secondary);
         color: white;
         max-height: 500px;
@@ -241,7 +233,7 @@
 
       .history-modal .modal-header {
         background: var(--bs-secondary);
-        color: var(--bs-primary); 
+        color: var(--bs-primary);
       }
 
       .area_boton_historial {
@@ -257,21 +249,94 @@
         border: none !important;
         padding: 16px 32px !important;
       }
+
+      /* Nuevos estilos para la pantalla de estadísticas */
+      .stats-container {
+        display: none;
+      }
+
+      .chart-container {
+        background-color: white;
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .chart-container canvas {
+        min-height: 300px;
+        width: 100% !important;
+      }
+
+      .chart-title {
+        color: var(--bs-secondary);
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+
+      .nav-tabs .nav-link {
+        color: var(--bs-secondary);
+        font-weight: 600;
+      }
+
+      .nav-tabs .nav-link.active {
+        color: var(--bs-primary);
+        background-color: var(--bs-secondary);
+        border-color: var(--bs-secondary);
+      }
+
+      .tab-content {
+        padding: 16px 0;
+      }
+
+      .back-button {
+        background-color: var(--bs-primary);
+        color: var(--bs-secondary);
+        border: none;
+        border-radius: 35px;
+        padding: 10px 20px;
+        font-weight: 600;
+        margin-top: 16px;
+      }
+
+      .chart-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .week-selector {
+        background-color: var(--bs-primary);
+        color: var(--bs-secondary);
+        border: none;
+        border-radius: 20px;
+        padding: 8px 16px;
+        font-weight: 600;
+      }
+
+      .chart-note {
+        font-size: 12px;
+        color: var(--bs-secondary);
+        margin-top: 8px;
+        text-align: center;
+      }
     </style>
   </head>
   <body class="d-flex justify-content-center align-items-center min-vh-100 p-3">
     <!-- Splash screen -->
-  <div class="splash-screen text-center">
-    <h1 class="fw-bold">Reto</h1>
-    <h1 class="fw-bold text_numero_inicial">365</h1>
-    <p class="lead">Tu ahorro diario</p>
-  </div>
+    <div class="splash-screen text-center">
+      <h1 class="fw-bold">Reto</h1>
+      <h1 class="fw-bold text_numero_inicial">365</h1>
+      <p class="lead">Tu ahorro diario</p>
+    </div>
 
-    <div class="app-container w-100">
+    <!-- Contenedor principal -->
+    <div class="app-container w-100 main-container">
       <!-- Header -->
       <div class="header">
         <div class="avatar">
-          <img src="img_perfil.png" alt="imagen de perfil">
+          <img src="img_perfil.png" alt="imagen de perfil" />
         </div>
         <div class="header-text">
           <h1 class="h4 mb-1 fw-bold">Bienvenido</h1>
@@ -281,55 +346,152 @@
 
       <div class="datos_ahorro">
         <!-- Progreso -->
-      <div class="progreso">
-        <div class="d-flex justify-content-between mb-2 small">
-          <div class="progreso_numero">
-            <p class="mb-0">Progreso:</p>
-          <span id="progressText">0 de 365 días</span>
+        <div class="progreso">
+          <div class="d-flex justify-content-between mb-2 small">
+            <div class="progreso_numero">
+              <p class="mb-0">Progreso:</p>
+              <span id="progressText">0 de 365 días</span>
+            </div>
+            <div class="completado">
+              <p class="mb-0">Completado:</p>
+              <span id="remainingText">Quedan 365</span>
+            </div>
+          </div>
+          <div class="progress progress-thin">
+            <div
+              id="progressBar"
+              class="progress-bar bg-primary"
+              role="progressbar"
+              style="width: 0%"
+            ></div>
+          </div>
         </div>
-        <div class="completado">
-          <p class="mb-0">Completado:</p>
-          <span id="remainingText">Quedan 365</span>
-        </div>
-        </div>
-        <div class="progress progress-thin">
-          <div
-            id="progressBar"
-            class="progress-bar bg-primary"
-            role="progressbar"
-            style="width: 0%"
-          ></div>
-        </div>
-      </div>
 
-      <!-- Ahorro Total -->
-      <div class="ahorro text-start">
-        <p>Ahorro Total:</p>
-        <h1 id="totalSavings" class="fw-bold mb-3">$0</h1>
-        <div class="botones d-flex gap-3">
-          <button id="drawCard" class="boton_primario btn btn-primary flex-grow-1 py-2">
-            Sacar Tarjeta
-          </button>
-          <button  id="showHistory"  class="boton_secundario btn btn-outline-primary flex-grow-1 py-2">
-            Historial
-          </button>
+        <!-- Ahorro Total -->
+        <div class="ahorro text-start">
+          <p>Ahorro Total:</p>
+          <h1 id="totalSavings" class="fw-bold mb-3">$0</h1>
+          <div class="botones d-flex gap-3">
+            <button
+              id="drawCard"
+              class="boton_primario btn btn-primary flex-grow-1 py-2"
+            >
+              Sacar Tarjeta
+            </button>
+            <button
+              id="showHistory"
+              class="boton_secundario btn btn-outline-primary flex-grow-1 py-2"
+            >
+              Historial
+            </button>
+            <button
+              id="showStats"
+              class="boton_secundario btn btn-outline-primary flex-grow-1 py-2"
+            >
+              Estadísticas
+            </button>
+          </div>
         </div>
-      </div>
       </div>
 
       <!-- Tarjeta -->
       <div id="cardDisplay" class="card-display rounded-3 mx-3 my-4"></div>
       <p id="lastNumber" class="text-center text-muted small mb-3"></p>
 
-      <!-- Slide Action -->
-      <div  id="slideAction"  class="slide-action bg-primary text-white p-3 mx-3 mb-3 rounded-3 d-flex justify-content-between" style="display: none !important;">
-        <span>Desliza para guardar</span>
-        <span><i class="bi bi-chevron-double-right"></i></span>
-      </div>
-
       <!-- Botón Reiniciar -->
       <button id="resetBtn" class="btn btn-link text-danger w-100 py-2 mb-2">
         Reiniciar Progreso
+      </button>
+    </div>
+
+    <!-- Contenedor de estadísticas -->
+    <div class="app-container w-100 stats-container" id="statsContainer">
+      <!-- Header (mismo que en la pantalla principal) -->
+      <div class="header">
+        <div class="avatar">
+          <img src="img_perfil.png" alt="imagen de perfil" />
+        </div>
+        <div class="header-text">
+          <h1 class="h4 mb-1 fw-bold">Bienvenido</h1>
+          <p class="small opacity-85 mb-0" id="statsCurrentDate">
+            Hoy: 10/5/2025
+          </p>
+        </div>
+      </div>
+
+      <!-- Ahorro Total en stats -->
+      <div class="ahorro text-start">
+        <p>Ahorro Total:</p>
+        <h1 id="statsTotalSavings" class="fw-bold mb-3">$0</h1>
+      </div>
+
+      <br />
+      <br />
+      <br />
+
+      <!-- Pestañas para gráficas -->
+      <ul class="nav nav-tabs" id="statsTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link active"
+            id="daily-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#daily-tab-pane"
+            type="button"
+            role="tab"
+          >
+            Diario
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="monthly-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#monthly-tab-pane"
+            type="button"
+            role="tab"
+          >
+            Mensual
+          </button>
+        </li>
+      </ul>
+
+      <!-- Contenido de las pestañas -->
+      <div class="tab-content" id="statsTabContent">
+        <!-- <div class="tab-pane fade show active" id="daily-tab-pane" role="tabpanel">
+                <div class="chart-container">
+                    <h3 class="chart-title">Ahorro Diario</h3>
+                    <canvas id="dailyChart"></canvas>
+                </div>
+            </div> -->
+        <div
+          class="tab-pane fade show active"
+          id="daily-tab-pane"
+          role="tabpanel"
+        >
+          <div class="chart-container">
+            <div class="chart-controls">
+              <h3 class="chart-title">Ahorro Diario</h3>
+              <select id="weekSelector" class="week-selector">
+                <!-- Las opciones se generarán dinámicamente -->
+              </select>
+            </div>
+            <canvas id="dailyChart"></canvas>
+            <p class="chart-note">Mostrando últimos 7 días</p>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="monthly-tab-pane" role="tabpanel">
+          <div class="chart-container">
+            <h3 class="chart-title">Ahorro Mensual</h3>
+            <canvas id="monthlyChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón para volver -->
+      <button id="backButton" class="back-button w-100">
+        Volver a la pantalla principal
       </button>
     </div>
 
@@ -339,13 +501,20 @@
         <div class="modal_historial modal-content overflow-hidden">
           <div class="modal-header border-0">
             <h5 class="modal-title">Historial de Ahorros</h5>
-            <button type="button"  class="btn-close btn-close-white"  data-bs-dismiss="modal"></button>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
           </div>
           <div class="modal-body p-0">
             <div id="historyList" class="px-3"></div>
           </div>
           <div class="area_boton_historial">
-            <button class="boton_historial btn-primary rounded-0 py-3" data-bs-dismiss="modal">
+            <button
+              class="boton_historial btn-primary rounded-0 py-3"
+              data-bs-dismiss="modal"
+            >
               Cerrar Historial
             </button>
           </div>
@@ -359,14 +528,22 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Confirmar Reinicio</h5>
-            <button  type="button" class="btn-close"  data-bs-dismiss="modal"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
           </div>
           <div class="modal-body">
             ¿Estás seguro que deseas reiniciar tu progreso? Todos tus datos se
             perderán.
           </div>
           <div class="modal-footer">
-            <button  type="button"  class="btn btn-secondary"  data-bs-dismiss="modal" >
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
               Cancelar
             </button>
             <button id="confirmReset" type="button" class="btn btn-danger">
@@ -381,37 +558,49 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
+      document.addEventListener('DOMContentLoaded', function () {
         // Elementos del DOM
-        const currentDateEl = document.getElementById("currentDate");
-        const progressTextEl = document.getElementById("progressText");
-        const remainingTextEl = document.getElementById("remainingText");
-        const progressBarEl = document.getElementById("progressBar");
-        const totalSavingsEl = document.getElementById("totalSavings");
-        const drawCardBtn = document.getElementById("drawCard");
-        const showHistoryBtn = document.getElementById("showHistory");
-        const cardDisplayEl = document.getElementById("cardDisplay");
-        const lastNumberEl = document.getElementById("lastNumber");
-        const slideActionBtn = document.getElementById("slideAction");
-        const resetBtn = document.getElementById("resetBtn");
-        const historyListEl = document.getElementById("historyList");
-        const confirmResetBtn = document.getElementById("confirmReset");
+        const currentDateEl = document.getElementById('currentDate');
+        const statsCurrentDateEl = document.getElementById('statsCurrentDate');
+        const progressTextEl = document.getElementById('progressText');
+        const remainingTextEl = document.getElementById('remainingText');
+        const progressBarEl = document.getElementById('progressBar');
+        const totalSavingsEl = document.getElementById('totalSavings');
+        const statsTotalSavingsEl =
+          document.getElementById('statsTotalSavings');
+        const drawCardBtn = document.getElementById('drawCard');
+        const showHistoryBtn = document.getElementById('showHistory');
+        const showStatsBtn = document.getElementById('showStats');
+        const cardDisplayEl = document.getElementById('cardDisplay');
+        const lastNumberEl = document.getElementById('lastNumber');
+        const resetBtn = document.getElementById('resetBtn');
+        const historyListEl = document.getElementById('historyList');
+        const confirmResetBtn = document.getElementById('confirmReset');
+        const backButton = document.getElementById('backButton');
+        const mainContainer = document.querySelector('.main-container');
+        const statsContainer = document.getElementById('statsContainer');
 
-        // Lógica para ocultar splash 
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        document.body.classList.add('loaded');
-      }, 2500);
-    });
+        // Variables para gráficas
+        let dailyChart = null;
+        let monthlyChart = null;
+        // Nueva variable para controlar la semana seleccionada
+        let currentWeek = 0; // 0 = última semana
+
+        // Lógica para ocultar splash
+        window.addEventListener('load', () => {
+          setTimeout(() => {
+            document.body.classList.add('loaded');
+          }, 2500);
+        });
 
         // Modales de Bootstrap
-        const historyModal = new bootstrap.Modal("#historyModal");
-        const confirmModal = new bootstrap.Modal("#confirmModal");
+        const historyModal = new bootstrap.Modal('#historyModal');
+        const confirmModal = new bootstrap.Modal('#confirmModal');
 
         // Datos de la aplicación
         const cards = Array.from({ length: 365 }, (_, i) => i + 1);
         let remainingCards = [...cards];
-        let drawnCards = JSON.parse(localStorage.getItem("drawnCards")) || [];
+        let drawnCards = JSON.parse(localStorage.getItem('drawnCards')) || [];
 
         // Inicializar aplicación
         updateDate();
@@ -419,18 +608,21 @@
         updateTotalSavings();
 
         // Event Listeners
-        drawCardBtn.addEventListener("click", drawCard);
-        slideActionBtn.addEventListener("click", drawCard);
-        showHistoryBtn.addEventListener("click", showHistory);
-        resetBtn.addEventListener("click", () => confirmModal.show());
-        confirmResetBtn.addEventListener("click", resetProgress);
+        drawCardBtn.addEventListener('click', drawCard);
+        showHistoryBtn.addEventListener('click', showHistory);
+        showStatsBtn.addEventListener('click', showStats);
+        resetBtn.addEventListener('click', () => confirmModal.show());
+        confirmResetBtn.addEventListener('click', resetProgress);
+        backButton.addEventListener('click', hideStats);
 
         // Funciones
         function updateDate() {
           const today = new Date();
-          currentDateEl.textContent = `Hoy: ${today.getDate()}/${
+          const dateStr = `Hoy: ${today.getDate()}/${
             today.getMonth() + 1
           }/${today.getFullYear()}`;
+          currentDateEl.textContent = dateStr;
+          statsCurrentDateEl.textContent = dateStr;
         }
 
         function updateProgress() {
@@ -446,12 +638,13 @@
         function updateTotalSavings() {
           const total = drawnCards.reduce((sum, num) => sum + num, 0);
           totalSavingsEl.textContent = `$${total.toLocaleString()}`;
+          statsTotalSavingsEl.textContent = `$${total.toLocaleString()}`;
         }
 
         function drawCard() {
           if (remainingCards.length === 0) {
-            cardDisplayEl.textContent = "¡Reto completado!";
-            cardDisplayEl.classList.add("bg-primary", "text-white");
+            cardDisplayEl.textContent = '¡Reto completado!';
+            cardDisplayEl.classList.add('bg-primary', 'text-white');
             return;
           }
 
@@ -460,10 +653,10 @@
           const drawnNumber = remainingCards[randomIndex];
 
           // Animación
-          cardDisplayEl.style.transform = "scale(0.9)";
+          cardDisplayEl.style.transform = 'scale(0.9)';
           setTimeout(() => {
             cardDisplayEl.textContent = `$${drawnNumber}`;
-            cardDisplayEl.style.transform = "scale(1)";
+            cardDisplayEl.style.transform = 'scale(1)';
           }, 200);
 
           // Actualizar datos
@@ -478,15 +671,15 @@
         }
 
         function showHistory() {
-          historyListEl.innerHTML = "";
+          historyListEl.innerHTML = '';
 
           if (drawnCards.length === 0) {
             historyListEl.innerHTML =
               '<div class="py-3 text-center text-muted">No hay historial disponible</div>';
           } else {
             drawnCards.forEach((num, idx) => {
-              const item = document.createElement("div");
-              item.className = "history-item d-flex justify-content-between";
+              const item = document.createElement('div');
+              item.className = 'history-item d-flex justify-content-between';
               item.innerHTML = `
                             <span>Día ${idx + 1}</span>
                             <span class="fw-bold">$${num}</span>
@@ -498,12 +691,230 @@
           historyModal.show();
         }
 
+        function showStats() {
+          mainContainer.style.display = 'none';
+          statsContainer.style.display = 'block';
+          updateCharts();
+        }
+
+        function hideStats() {
+          statsContainer.style.display = 'none';
+          mainContainer.style.display = 'block';
+        }
+
+        function updateCharts() {
+          // Destruir gráficas existentes si las hay
+          if (dailyChart) {
+            dailyChart.destroy();
+          }
+          if (monthlyChart) {
+            monthlyChart.destroy();
+          }
+
+          // Datos para gráfica diaria
+          const dailyData = drawnCards.map((amount, index) => ({
+            day: index + 1,
+            amount,
+          }));
+
+          // Actualizar selector de semanas
+          updateWeekSelector(dailyData.length);
+
+          // Filtrar datos según la semana seleccionada
+          const filteredDailyData = filterDataByWeek(dailyData, currentWeek);
+
+          // Calcular datos mensuales
+          const monthlyData = calculateMonthlyData(drawnCards); // <-- Esta línea es crucial
+
+          // Crear gráfica diaria
+          const dailyCtx = document
+            .getElementById('dailyChart')
+            .getContext('2d');
+          dailyChart = new Chart(dailyCtx, {
+            type: 'bar',
+            data: {
+              labels: filteredDailyData.map((item) => `Día ${item.day}`),
+              datasets: [
+                {
+                  label: 'Ahorro diario',
+                  data: filteredDailyData.map((item) => item.amount),
+                  backgroundColor: '#c5e861',
+                  borderColor: '#1b2020',
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  display: false,
+                },
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: 'Cantidad ($)',
+                  },
+                },
+                x: {
+                  title: {
+                    display: true,
+                    text: 'Días',
+                  },
+                },
+              },
+            },
+          });
+
+          // Crear gráfica mensual
+          const monthlyCtx = document
+            .getElementById('monthlyChart')
+            .getContext('2d');
+          monthlyChart = new Chart(monthlyCtx, {
+            type: 'line',
+            data: {
+              labels: monthlyData.map((item) => item.month),
+              datasets: [
+                {
+                  label: 'Ahorro mensual',
+                  data: monthlyData.map((item) => item.total),
+                  backgroundColor: '#c5e861',
+                  borderColor: '#1b2020',
+                  borderWidth: 2,
+                  fill: true,
+                  tension: 0.4,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  display: false,
+                },
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: 'Total ($)',
+                  },
+                },
+                x: {
+                  title: {
+                    display: true,
+                    text: 'Meses',
+                  },
+                },
+              },
+            },
+          });
+        }
+
+        // Nueva función para actualizar el selector de semanas
+        function updateWeekSelector(totalDays) {
+          const weekSelector = document.getElementById('weekSelector');
+          weekSelector.innerHTML = '';
+
+          const totalWeeks = Math.ceil(totalDays / 7);
+
+          // Agregar opción para última semana
+          const lastWeekOption = document.createElement('option');
+          lastWeekOption.value = '0';
+          lastWeekOption.textContent = 'Última semana';
+          weekSelector.appendChild(lastWeekOption);
+
+          // Agregar opciones para cada semana
+          for (let i = 1; i <= totalWeeks; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = `Semana ${i}`;
+            weekSelector.appendChild(option);
+          }
+
+          // Establecer el valor seleccionado
+          weekSelector.value = currentWeek;
+
+          // Event listener para cambios en el selector
+          weekSelector.addEventListener('change', function () {
+            currentWeek = parseInt(this.value);
+            updateCharts();
+            updateChartNote();
+          });
+        }
+
+        // Función para filtrar datos por semana
+        function filterDataByWeek(data, week) {
+          if (week === 0) {
+            // Mostrar última semana (últimos 7 días o menos)
+            return data.slice(-7);
+          } else {
+            // Mostrar semana específica (7 días)
+            const startIndex = (week - 1) * 7;
+            return data.slice(startIndex, startIndex + 7);
+          }
+        }
+
+        // Función para actualizar la nota debajo de la gráfica
+        function updateChartNote() {
+          const noteElement = document.querySelector('.chart-note');
+          if (currentWeek === 0) {
+            noteElement.textContent = 'Mostrando últimos 7 días';
+          } else {
+            noteElement.textContent = `Mostrando semana ${currentWeek}`;
+          }
+        }
+
+        function calculateMonthlyData(drawnCards) {
+          // Agrupar ahorros por mes
+          const today = new Date();
+          const currentYear = today.getFullYear();
+          const months = [
+            'Ene',
+            'Feb',
+            'Mar',
+            'Abr',
+            'May',
+            'Jun',
+            'Jul',
+            'Ago',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dic',
+          ];
+
+          const monthlyTotals = Array(12).fill(0);
+          const monthlyCounts = Array(12).fill(0);
+
+          // Simular fechas para cada día ahorrado
+          drawnCards.forEach((amount, index) => {
+            const dayOfYear = index + 1;
+            const date = new Date(currentYear, 0); // 1 de enero del año actual
+            date.setDate(dayOfYear); // Avanzar al día correspondiente
+            const month = date.getMonth(); // 0-11
+            monthlyTotals[month] += amount;
+            monthlyCounts[month]++;
+          });
+
+          // Crear array de objetos con nombre de mes y total
+          return months.map((monthName, index) => ({
+            month: monthName,
+            total: monthlyTotals[index],
+            days: monthlyCounts[index], // Días con ahorro en el mes
+          }));
+        }
+
         function resetProgress() {
           drawnCards = [];
           remainingCards = [...cards];
-          cardDisplayEl.textContent = "";
-          cardDisplayEl.classList.remove("bg-primary", "text-white");
-          lastNumberEl.textContent = "";
+          cardDisplayEl.textContent = '';
+          cardDisplayEl.classList.remove('bg-primary', 'text-white');
+          lastNumberEl.textContent = '';
 
           saveProgress();
           updateProgress();
@@ -513,7 +924,7 @@
         }
 
         function saveProgress() {
-          localStorage.setItem("drawnCards", JSON.stringify(drawnCards));
+          localStorage.setItem('drawnCards', JSON.stringify(drawnCards));
         }
       });
     </script>
