@@ -4,47 +4,61 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Reto 365 - App de Ahorro</title>
-    <!-- Bootstrap 5.3.3 CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <!-- Bootstrap Icons -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
-    <!-- Chart.js -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <style>
+      /* Variables CSS actualizadas para una estética moderna con tema oscuro */
       :root {
-        --bs-primary: #c5e861;
-        --bs-primary-rgb: 0, 184, 148;
-        --bs-background: #effce0;
-        --bs-secondary: #1b2020;
-        --bs-secondary-rgb: 45, 52, 54;
+        --app-primary: #c5e861; /* Verde vibrante similar al de la app de referencia */
+        --app-dark: #1A1A1A; /* Casi negro para elementos clave y fondos */
+        --app-light-bg: #F0F2F5; /* Un gris muy claro para el fondo general (original) */
+
+        /* Nuevos colores para el tema oscuro */
+        --profile-bg: #1e1e1e; /* Fondo principal oscuro */
+        --profile-card-bg: #2a2a2a; /* Fondo para las tarjetas y contenedores en el tema oscuro */
+        --profile-text-light: #f5f5f5; /* Texto principal claro en fondo oscuro */
+        --profile-text-muted: #aaaaaa; /* Texto secundario o menos prominente */
+
+        /* Colores de las tarjetas de logros/recompensas */
+        --achievement-yellow: #f8c944; /* Amarillo de "Achievements" */
+        --offers-blue: #95d0ed; /* Azul de "Offers" */
+        --rewards-green: #90ee90; /* Verde de "Rewards" (ajustado ligeramente para contraste) */
+        --reward-icon-color: #333333; /* Color oscuro para los iconos dentro de las tarjetas */
+
+        /* Colores para el historial de transacciones */
+        --history-debit-red: #ff6b6b; /* Rojo para "To" (débito/pospuesto) */
+        --history-credit-green: #6bff6b; /* Verde para "From" (crédito/ahorrado) */
       }
 
       body {
-        background-color: var(--bs-background);
-        font-family: consolas;
+        background-color: var(--profile-bg); /* Fondo oscuro principal */
+        font-family: 'Inter', sans-serif; /* Usando la fuente Inter para un look moderno */
+        color: var(--profile-text-light); /* Color de texto principal claro */
       }
 
-      /* pantalla de bienvenida */
+      /* pantalla de bienvenida (splash screen) */
       .splash-screen {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: var(--bs-primary);
+        background-color: var(--app-primary); /* Fondo verde vibrante */
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         z-index: 1050;
-        color: var(--bs-secondary);
+        color: var(--app-dark); /* Texto oscuro sobre el verde */
         animation: fadeOut 1s ease-in-out 2s forwards;
       }
 
@@ -52,11 +66,13 @@
         font-size: 4rem;
         animation: zoomIn 1s ease;
         margin: 0;
+        font-weight: 800; /* Más audaz para los títulos del splash */
       }
 
       .splash-screen .text_numero_inicial {
         font-size: 15rem !important;
-        font-weight: 900 !important;
+        font-weight: 900 !important; /* Muy audaz para el número 365 */
+        line-height: 1; /* Ajustar el interlineado */
       }
 
       @keyframes zoomIn {
@@ -77,8 +93,9 @@
         }
       }
 
-      .main-content {
-        display: none;
+      /* Ocultar contenedores al inicio */
+      .main-container, .stats-container, .profile-container {
+          display: none;
       }
 
       body.loaded .main-content {
@@ -88,34 +105,34 @@
 
       .app-container {
         max-width: 600px;
-        border-radius: 20px;
+        border-radius: 20px; /* Bordes más redondeados */
         padding: 32px;
         overflow: hidden;
-        background-color: var(--bs-background);
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        background-color: var(--profile-card-bg); /* Fondo oscuro para el contenedor principal */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada y oscura */
       }
 
       .header {
         display: flex;
         width: 100%;
-        padding: 16px;
+        padding: 0; /* Remueve el padding del header si el container ya lo tiene */
         align-items: center;
-        gap: 8px;
-        margin: 0 0 16px 0;
+        gap: 16px; /* Más espacio entre avatar y texto */
+        margin: 0 0 24px 0; /* Más espacio debajo del header */
       }
 
       .header .avatar {
-        width: 80px;
-        height: 80px;
-        border: solid 2px;
-        border-color: darkseagreen;
-        border-radius: 50px;
+        width: 70px;
+        height: 70px;
+        border: solid 3px var(--app-primary); /* Borde con el nuevo color primario */
+        border-radius: 50%; /* Asegura que la imagen de perfil sea completamente redonda */
+        overflow: hidden; /* Para que la imagen no se desborde del círculo */
       }
 
       .header .avatar img {
         width: 100%;
         height: 100%;
-        border-radius: 50px;
+        border-radius: 50%;
         object-fit: cover;
         object-position: top;
       }
@@ -125,21 +142,33 @@
         flex-direction: column;
       }
 
+      .header-text h1 {
+        font-weight: 700; /* Semibold para el nombre */
+        margin-bottom: 4px !important; /* Ajusta el espacio */
+        color: var(--profile-text-light); /* Color de texto claro */
+      }
+
+      .header-text p {
+        font-size: 0.9rem;
+        color: var(--profile-text-muted); /* Texto secundario gris */
+      }
+
       .datos_ahorro {
         display: flex;
         flex-direction: column;
-        gap: 32px;
+        gap: 24px; /* Ajusta el espacio entre las secciones de ahorro */
       }
 
       .progreso {
-        background-color: #c5e861;
-        border-radius: 35px;
-        padding: 32px;
+        background-color: var(--app-primary); /* Fondo verde vibrante */
+        border-radius: 16px; /* Bordes redondeados consistentes */
+        padding: 24px;
+        color: var(--app-dark); /* Texto oscuro para el progreso */
       }
 
       .progreso #progressText,
       .progreso #remainingText {
-        font-size: 16px;
+        font-size: 1rem; /* Tamaño de fuente ligeramente mayor */
         font-weight: 600;
       }
 
@@ -148,56 +177,74 @@
       }
 
       .progress-bar {
-        background: var(--bs-secondary) !important;
+        background: var(--app-dark) !important; /* Barra de progreso oscura */
+        border-radius: 5px; /* Bordes redondeados para la barra */
       }
 
       .ahorro {
         padding: 32px;
         display: flex;
-        background-color: var(--bs-secondary);
-        border-radius: 35px;
+        background-color: var(--app-dark); /* Fondo oscuro para la sección de ahorro total */
+        border-radius: 16px; /* Bordes redondeados consistentes */
         color: white;
         flex-direction: column;
         gap: 8px;
       }
 
-      .ahorro h1 {
-        font-size: 48px;
-      }
-
       .ahorro p {
-        font-size: 24px;
-        color: white;
+        font-size: 1.1rem; /* Ajusta el tamaño de la etiqueta "Ahorro Total" */
+        color: rgba(255, 255, 255, 0.8); /* Ligeramente más translúcido */
         margin: 0;
       }
 
-      .ahorro .botones {
-        flex-direction: column;
+      .ahorro h1 {
+        font-size: 3.5rem; /* Agrandar el número de ahorro total */
+        font-weight: 800; /* Más audaz */
+        margin-bottom: 24px; /* Más espacio antes de los botones */
       }
 
+
+      .ahorro .botones {
+        flex-direction: column; /* Predeterminado para la pantalla principal */
+        gap: 15px; /* Espacio entre los botones */
+      }
+      .ahorro .botones.action-buttons { /* Clase para los botones de Ahorrar/Posponer */
+        flex-direction: row; /* En fila para Ahorrar/Posponer */
+        flex-wrap: wrap; /* Permite que se envuelvan */
+        justify-content: center; /* Centrar los botones */
+      }
+
+
       .botones .boton_primario {
-        background-color: var(--bs-primary) !important;
-        color: var(--bs-secondary) !important;
+        background-color: var(--app-primary) !important;
+        color: var(--app-dark) !important;
         border: none !important;
-        border-radius: 35px !important;
-        min-height: 50px !important;
-        font-weight: 600;
+        border-radius: 25px !important; /* Más redondeado para un estilo moderno */
+        min-height: 55px !important; /* Altura un poco mayor para mejor toque */
+        font-weight: 700; /* Más audaz */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra para el botón principal */
+        transition: all 0.2s ease-in-out;
+      }
+
+      .botones .boton_primario:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
       }
 
       .botones .boton_secundario {
-        color: var(--bs-primary) !important;
-        border-color: var(--bs-primary) !important;
-        border-radius: 35px !important;
-        min-height: 50px !important;
-        font-weight: 600;
+        color: var(--app-primary) !important;
+        border-color: var(--app-primary) !important;
+        border-radius: 25px !important;
+        min-height: 55px !important;
+        font-weight: 700;
+        transition: all 0.2s ease-in-out;
       }
 
       .botones .boton_secundario:hover {
-        background-color: var(--bs-primary);
-        color: var(--bs-secondary) !important;
-        border-color: var(--bs-primary) !important;
-        border-radius: 35px !important;
-        min-height: 50px !important;
+        background-color: var(--app-primary);
+        color: var(--app-dark) !important;
+        border-color: var(--app-primary) !important;
+        transform: translateY(-2px);
       }
 
       .card-display {
@@ -205,84 +252,181 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2.5rem;
-        font-weight: 700;
-        background-color: #f0f5f5;
+        background: linear-gradient(45deg, var(--app-primary), #d9ff99); /* Gradiente de verde */
+        color: var(--app-dark); /* Texto oscuro */
+        border-radius: 18px; /* Ligeramente menos redondeado que los contenedores */
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Sombra para la tarjeta */
+        font-size: 3.8rem; /* Más grande */
+        font-weight: 900; /* Muy audaz */
+        letter-spacing: -2px; /* Espaciado negativo para números grandes */
+        margin: 2rem auto; /* Centrar y más margen vertical */
+        transition: transform 0.2s ease;
       }
 
       #lastNumber {
-        font-size: 24px;
+        font-size: 1.1rem;
         font-weight: 600;
+        color: var(--profile-text-muted); /* Texto gris para el último número */
+        margin-top: -1rem; /* Ajusta el margen para acercarlo a la tarjeta */
+        margin-bottom: 2rem; /* Más espacio debajo */
       }
 
+      #resetBtn {
+        color: var(--profile-text-muted); /* Color en tema oscuro */
+        font-weight: 600;
+        text-decoration: none; /* Quitar el subrayado por defecto de link */
+        transition: color 0.2s ease;
+      }
+      #resetBtn:hover {
+        color: #dc3545; /* Rojo de peligro al pasar el ratón */
+        text-decoration: underline; /* Volver a poner subrayado en hover */
+      }
+
+      /* Modal Historial */
       .modal-body {
-        background-color: var(--bs-secondary);
+        background-color: var(--app-dark);
         color: white;
-        max-height: 500px;
-        overflow: auto;
+        max-height: 500px; /* Limita la altura para scroll */
+        overflow-y: auto; /* Habilita el scroll vertical */
       }
 
-      .history-item {
-        border-bottom: 1px solid #dee2e6;
+      .modal_historial.modal-content { /* Clase para el contenido del modal */
+        border-radius: 20px; /* Bordes redondeados para el modal */
+        overflow: hidden; /* Asegura que el contenido se ajuste al border-radius */
+      }
+
+      .history-item { /* Estilo para el historial dentro del modal */
+        display: flex;
+        align-items: center;
         padding: 0.75rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Separador más sutil */
+        color: white; /* Texto blanco para el modal oscuro */
       }
 
       .history-item:last-child {
         border-bottom: none;
       }
 
+      .history-item .icon-wrapper {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-right: 15px;
+          flex-shrink: 0;
+      }
+
+      .history-item .icon-wrapper i {
+          font-size: 1.2rem;
+          color: white;
+      }
+
+      .history-item .icon-debit { /* Para flecha de posponer/no guardado en modal */
+          background-color: var(--history-debit-red);
+      }
+      .history-item .icon-credit { /* Para flecha de guardado/ahorro real en modal */
+          background-color: var(--history-credit-green);
+      }
+
+      .history-item .item-details {
+          flex-grow: 1;
+      }
+      .history-item .item-details p {
+          margin-bottom: 2px;
+          font-size: 0.95rem;
+          color: white;
+      }
+      .history-item .item-details span {
+          font-size: 0.8rem;
+          color: rgba(255, 255, 255, 0.7);
+      }
+      .history-item .item-amount {
+          font-weight: 700;
+          font-size: 1.1rem;
+          margin-left: 15px;
+          flex-shrink: 0;
+          color: var(--app-primary); /* Monto en verde vibrante */
+      }
+
+
       .history-modal .modal-header {
-        background: var(--bs-secondary);
-        color: var(--bs-primary);
+        background: var(--app-dark);
+        color: var(--app-primary); /* Título del modal en verde */
+        border-bottom: none; /* Quitar el borde */
+        padding: 1.5rem;
+      }
+      .history-modal .btn-close-white {
+          color: var(--app-primary) !important; /* El botón de cerrar en verde */
+          filter: invert(1); /* Hack para cambiar el color del icono de cerrar */
       }
 
       .area_boton_historial {
-        background: var(--bs-secondary);
+        background: var(--app-dark);
         padding: 16px;
         text-align: center;
       }
 
       .area_boton_historial .boton_historial {
-        background: var(--bs-primary);
-        color: var(--bs-secondary);
-        border-radius: 35px !important;
+        background: var(--app-primary);
+        color: var(--app-dark);
+        border-radius: 25px !important; /* Más redondeado */
         border: none !important;
-        padding: 16px 32px !important;
+        padding: 12px 30px !important;
+        font-weight: 700;
+        transition: all 0.2s ease-in-out;
+      }
+      .area_boton_historial .boton_historial:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       }
 
       /* Nuevos estilos para la pantalla de estadísticas */
       .stats-container {
-        display: none;
+        /* display: none;  Se maneja por JS */
       }
 
       .chart-container {
-        background-color: white;
-        border-radius: 16px;
-        padding: 16px;
+        background-color: var(--profile-card-bg); /* Fondo oscuro para las tarjetas de gráfico */
+        border-radius: 16px; /* Bordes redondeados */
+        padding: 20px;
         margin-bottom: 20px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra suave */
       }
 
       .chart-container canvas {
-        /* min-height: 300px; */
+        /* min-height: 300px;  Ajusta si es necesario, responsive true ya ayuda */
         width: 100% !important;
       }
 
       .chart-title {
-        color: var(--bs-secondary);
-        font-weight: 600;
-        margin-bottom: 16px;
+        color: var(--profile-text-light); /* Color de texto claro */
+        font-weight: 700; /* Semibold para los títulos de gráfico */
+        margin-bottom: 12px;
+      }
+
+      .nav-tabs {
+          border-bottom: none; /* Quitar la línea inferior por defecto de Bootstrap */
+      }
+      .nav-tabs .nav-item {
+          flex-grow: 1; /* Para que las pestañas ocupen el espacio equitativamente */
+          text-align: center;
       }
 
       .nav-tabs .nav-link {
-        color: var(--bs-secondary);
+        color: var(--profile-text-muted); /* Color de texto normal para pestañas */
         font-weight: 600;
+        border: none;
+        padding: 12px 0; /* Padding vertical para las pestañas */
+        transition: all 0.3s ease;
+        border-radius: 8px 8px 0 0; /* Bordes redondeados en la parte superior */
       }
 
       .nav-tabs .nav-link.active {
-        color: var(--bs-primary);
-        background-color: var(--bs-secondary);
-        border-color: var(--bs-secondary);
+        color: var(--app-primary); /* Texto verde vibrante para la pestaña activa */
+        background-color: var(--profile-card-bg); /* Fondo oscuro para la pestaña activa */
+        border-color: var(--profile-card-bg); /* Borde con el mismo color para que se vea sólido */
       }
 
       .tab-content {
@@ -290,62 +434,297 @@
       }
 
       .back-button {
-        background-color: var(--bs-primary);
-        color: var(--bs-secondary);
+        background-color: var(--app-primary);
+        color: var(--app-dark);
         border: none;
-        border-radius: 35px;
-        padding: 10px 20px;
-        font-weight: 600;
-        margin-top: 16px;
+        border-radius: 25px;
+        padding: 12px 20px;
+        font-weight: 700;
+        margin-top: 24px;
+        width: 100%; /* Ocupa todo el ancho */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s ease-in-out;
       }
+      .back-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
+
 
       .chart-controls {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 16px;
+        flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
+        gap: 10px; /* Espacio entre el título y el selector en pantallas pequeñas */
       }
 
       .week-selector {
-        background-color: var(--bs-primary);
-        color: var(--bs-secondary);
+        background-color: var(--app-primary);
+        color: var(--app-dark);
         border: none;
         border-radius: 20px;
         padding: 8px 16px;
         font-weight: 600;
+        cursor: pointer;
+        appearance: none; /* Elimina estilos por defecto del select en algunos navegadores */
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%231A1A1A' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 16px 12px;
       }
 
       .chart-note {
-        font-size: 12px;
-        color: var(--bs-secondary);
-        margin-top: 8px;
+        font-size: 0.85rem;
+        color: var(--profile-text-muted); /* Color en tema oscuro */
+        margin-top: 10px;
         text-align: center;
+      }
+
+      /* Modal de Confirmación de Reinicio - Bootstrap por defecto es generalmente bueno, solo ajustamos colores */
+      .modal-content {
+          border-radius: 12px;
+          background-color: var(--profile-card-bg); /* Fondo oscuro */
+          color: var(--profile-text-light); /* Texto claro */
+      }
+      .modal-header {
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Borde claro */
+      }
+      .modal-title {
+          color: var(--profile-text-light);
+      }
+      .modal-footer {
+          border-top: 1px solid rgba(255, 255, 255, 0.1); /* Borde claro */
+      }
+      .modal-footer .btn-secondary {
+          background-color: var(--profile-text-muted);
+          border-color: var(--profile-text-muted);
+          color: var(--app-dark);
+      }
+      .modal-footer .btn-danger {
+          background-color: #dc3545;
+          border-color: #dc3545;
+          color: var(--profile-text-light); /* Usar variable de texto claro para botones de peligro */
+      }
+      .btn-close {
+          filter: invert(1); /* Para que el icono sea blanco */
+      }
+
+
+      /* --- Nuevos estilos para la pantalla de perfil (Ya existentes y adaptados) --- */
+      .profile-container {
+          /* display: none;  Ocultar inicialmente */
+          background-color: var(--profile-bg); /* Fondo principal oscuro de la imagen de referencia */
+          color: var(--profile-text-light); /* Color de texto general claro */
+      }
+
+      .screen-header { /* Nuevo estilo para el header de pantallas secundarias */
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 24px;
+          padding: 0;
+      }
+
+      .screen-header h5 {
+          font-weight: 600;
+          margin-bottom: 0; /* Asegurarse de que no tenga margen inferior */
+      }
+      .screen-header .btn-link {
+          color: var(--profile-text-light); /* Iconos blancos */
+          padding: 0; /* Remover padding por defecto */
+      }
+      .screen-header .btn-link:hover {
+          color: var(--app-primary);
+      }
+
+      /* Información del perfil */
+      .profile-info {
+          text-align: center;
+          margin-bottom: 40px;
+      }
+      .profile-info .profile-avatar {
+          width: 100px;
+          height: 100px;
+          margin: 0 auto 16px auto;
+      }
+      .profile-info .profile-avatar img {
+          border: solid 3px var(--app-primary); /* Borde verde vibrante */
+          object-fit: cover;
+          object-position: center; /* Centrar la imagen en el círculo */
+      }
+      .profile-name {
+          font-weight: 700;
+          color: var(--profile-text-light);
+          font-size: 1.8rem;
+      }
+      .profile-id {
+          color: var(--profile-text-muted);
+          font-size: 0.85rem;
+      }
+
+      /* Secciones generales del perfil */
+      .section-title {
+          color: var(--profile-text-light);
+          font-weight: 600;
+          font-size: 1.2rem;
+      }
+
+      /* Estilo de las tarjetas dentro del perfil (Dashboard, etc.) */
+      .profile-card {
+          background-color: var(--profile-card-bg);
+          border-radius: 12px;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra más oscura */
+          padding: 20px;
+          color: var(--profile-text-light);
+      }
+      .profile-card-transparent { /* Para el historial compacto, sin fondo oscuro directo */
+          background-color: transparent;
+          border-radius: 12px;
+          padding: 0;
+      }
+
+      .profile-card .card-label {
+          color: var(--profile-text-muted);
+          font-size: 0.85rem;
+          margin-bottom: 4px;
+      }
+      .profile-card .card-value {
+          font-weight: 700;
+          font-size: 1.3rem;
+      }
+
+      /* Recompensas / Logros */
+      .rewards-section .view-all-link {
+          color: var(--profile-text-muted);
+          font-size: 0.9rem;
+          font-weight: 600;
+      }
+
+      .reward-item {
+          padding: 15px;
+          border-radius: 12px;
+          box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+          height: 100px; /* Altura fija para uniformidad */
+      }
+      .reward-item .reward-icon {
+          color: var(--reward-icon-color); /* Color oscuro para los iconos */
+      }
+      .reward-item p {
+          color: var(--reward-icon-color);
+      }
+
+      .reward-yellow { background-color: var(--achievement-yellow); }
+      .reward-blue { background-color: var(--offers-blue); }
+      .reward-green { background-color: var(--rewards-green); }
+
+
+      /* Historial de últimos ahorros en el perfil */
+      .history-list-compact {
+          max-height: 250px; /* Limita la altura para scroll */
+          overflow-y: auto; /* Habilita el scroll vertical */
+          /* Ocultar la barra de desplazamiento */
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+      }
+
+      .history-list-compact::-webkit-scrollbar { /* Chrome, Safari, Opera */
+          display: none;
+      }
+
+      .history-list-compact .history-item-profile {
+          display: flex;
+          align-items: center;
+          padding: 12px 0;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Separador sutil */
+          color: var(--profile-text-light);
+      }
+      .history-list-compact .history-item-profile:last-child {
+          border-bottom: none;
+      }
+
+      .history-item-profile .icon-wrapper {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-right: 15px;
+          flex-shrink: 0;
+      }
+
+      .history-item-profile .icon-wrapper i {
+          font-size: 1.2rem;
+          color: white;
+      }
+
+      .history-item-profile .icon-debit { /* Para flecha de posponer/no guardado */
+          background-color: var(--history-debit-red);
+      }
+      .history-item-profile .icon-credit { /* Para flecha de guardado/ahorro real */
+          background-color: var(--history-credit-green);
+      }
+
+      .history-item-profile .item-details {
+          flex-grow: 1;
+      }
+
+      .history-item-profile .item-details p {
+          margin-bottom: 2px;
+          font-size: 0.95rem;
+          color: var(--profile-text-light);
+      }
+      .history-item-profile .item-details span {
+          font-size: 0.8rem;
+          color: var(--profile-text-muted);
+      }
+      .history-item-profile .item-amount {
+          font-weight: 700;
+          font-size: 1.1rem;
+          margin-left: 15px;
+          flex-shrink: 0;
+      }
+      .history-item-profile .amount-debit {
+          color: var(--history-debit-red);
+      }
+      .history-item-profile .amount-credit {
+          color: var(--history-credit-green);
+      }
+
+      #viewFullHistoryBtn {
+          color: var(--profile-text-muted);
+          font-weight: 600;
+          font-size: 0.9rem;
+          transition: color 0.2s ease;
+      }
+      #viewFullHistoryBtn:hover {
+          color: var(--app-primary);
       }
     </style>
   </head>
   <body class="d-flex justify-content-center align-items-center min-vh-100 p-3">
-    <!-- Splash screen -->
     <div class="splash-screen text-center">
       <h1 class="fw-bold">Reto</h1>
       <h1 class="fw-bold text_numero_inicial">365</h1>
       <p class="lead">Tu ahorro diario</p>
     </div>
 
-    <!-- Contenedor principal -->
     <div class="app-container w-100 main-container">
-      <!-- Header -->
       <div class="header">
         <div class="avatar">
-          <img src="img_perfil.png" alt="imagen de perfil" />
+          <img src="img_perfil.jpg" alt="imagen de perfil" />
         </div>
         <div class="header-text">
           <h1 class="h4 mb-1 fw-bold">Bienvenido</h1>
           <p class="small opacity-85 mb-0" id="currentDate">Hoy: 10/5/2025</p>
         </div>
+        <button id="showProfileBtn" class="btn btn-link ms-auto p-0">
+            <i class="bi bi-person-circle fs-4 text-secondary" style="color: var(--profile-text-light) !important;"></i> </button>
       </div>
 
       <div class="datos_ahorro">
-        <!-- Progreso -->
         <div class="progreso">
           <div class="d-flex justify-content-between mb-2 small">
             <div class="progreso_numero">
@@ -360,14 +739,13 @@
           <div class="progress progress-thin">
             <div
               id="progressBar"
-              class="progress-bar bg-primary"
+              class="progress-bar"
               role="progressbar"
               style="width: 0%"
             ></div>
           </div>
         </div>
 
-        <!-- Ahorro Total -->
         <div class="ahorro text-start">
           <p>Ahorro Total:</p>
           <h1 id="totalSavings" class="fw-bold mb-3">$0</h1>
@@ -394,32 +772,25 @@
         </div>
       </div>
 
-      <!-- Tarjeta -->
       <div id="cardDisplay" class="card-display rounded-3 mx-3 my-4"></div>
       <p id="lastNumber" class="text-center text-muted small mb-3"></p>
 
-      <!-- Botón Reiniciar -->
-      <button id="resetBtn" class="btn btn-link text-danger w-100 py-2 mb-2">
+      <button id="resetBtn" class="btn btn-link w-100 py-2 mb-2">
         Reiniciar Progreso
       </button>
     </div>
 
-    <!-- Contenedor de estadísticas -->
     <div class="app-container w-100 stats-container" id="statsContainer">
-      <!-- Header (mismo que en la pantalla principal) -->
-      <div class="header">
-        <div class="avatar">
-          <img src="img_perfil.png" alt="imagen de perfil" />
-        </div>
-        <div class="header-text">
-          <h1 class="h4 mb-1 fw-bold">Bienvenido</h1>
-          <p class="small opacity-85 mb-0" id="statsCurrentDate">
-            Hoy: 10/5/2025
-          </p>
-        </div>
+      <div class="screen-header">
+          <button class="btn btn-link text-decoration-none" id="backButtonStats">
+              <i class="bi bi-chevron-left fs-4"></i>
+          </button>
+          <h5 class="flex-grow-1 text-center mb-0 text-white">Estadísticas</h5>
+          <button class="btn btn-link text-decoration-none" id="statsOptionsBtn">
+              <i class="bi bi-three-dots-vertical fs-4"></i>
+          </button>
       </div>
 
-      <!-- Ahorro Total en stats -->
       <div class="ahorro text-start">
         <p>Ahorro Total:</p>
         <h1 id="statsTotalSavings" class="fw-bold mb-3">$0</h1>
@@ -429,7 +800,6 @@
       <br />
       <br />
 
-      <!-- Pestañas para gráficas -->
       <ul class="nav nav-tabs" id="statsTabs" role="tablist">
         <li class="nav-item" role="presentation">
           <button
@@ -457,14 +827,7 @@
         </li>
       </ul>
 
-      <!-- Contenido de las pestañas -->
       <div class="tab-content" id="statsTabContent">
-        <!-- <div class="tab-pane fade show active" id="daily-tab-pane" role="tabpanel">
-                <div class="chart-container">
-                    <h3 class="chart-title">Ahorro Diario</h3>
-                    <canvas id="dailyChart"></canvas>
-                </div>
-            </div> -->
         <div
           class="tab-pane fade show active"
           id="daily-tab-pane"
@@ -474,8 +837,7 @@
             <div class="chart-controls">
               <h3 class="chart-title">Ahorro Diario</h3>
               <select id="weekSelector" class="week-selector">
-                <!-- Las opciones se generarán dinámicamente -->
-              </select>
+                </select>
             </div>
             <canvas id="dailyChart"></canvas>
             <p class="chart-note">Mostrando últimos 7 días</p>
@@ -489,13 +851,88 @@
         </div>
       </div>
 
-      <!-- Botón para volver -->
       <button id="backButton" class="back-button w-100">
         Volver a la pantalla principal
       </button>
     </div>
 
-    <!-- Modal Historial -->
+    <div class="app-container w-100 profile-container" id="profileContainer">
+        <div class="screen-header">
+            <button class="btn btn-link text-decoration-none p-0" id="backToMainFromProfile">
+                <i class="bi bi-chevron-left fs-4"></i>
+            </button>
+            <h5 class="flex-grow-1 text-center mb-0 text-white">Mi Perfil</h5>
+            <button class="btn btn-link text-decoration-none p-0">
+                <i class="bi bi-three-dots-vertical fs-4"></i>
+            </button>
+        </div>
+
+        <div class="profile-info mb-5">
+            <div class="profile-avatar mb-3">
+                <img src="img_perfil.jpg" alt="Imagen de Perfil" class="img-fluid rounded-circle">
+            </div>
+            <h3 class="profile-name mb-1">PAVITHRAN</h3>
+            <p class="profile-id small">ID: 8676113636</p>
+        </div>
+
+        <div class="dashboard-section mb-4">
+            <h4 class="section-title mb-3">Dashboard</h4>
+            <div class="profile-card d-flex align-items-center p-3">
+                <i class="bi bi-wallet2 fs-2 me-3 text-white-50"></i>
+                <div>
+                    <p class="card-label mb-1">Balance de Ahorro (Media Mensual)</p>
+                    <h5 class="card-value" id="monthlyAvgSavings">$0</h5>
+                </div>
+                <div class="ms-auto text-end">
+                    <p class="card-label mb-1">Ahorro Total</p>
+                    <h5 class="card-value" id="totalSavingsProfile">$0</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="rewards-section mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="section-title mb-0">Logros y Recompensas</h4>
+                <a href="#" class="view-all-link small">Ver todo</a>
+            </div>
+            <div class="row row-cols-3 g-3 text-center">
+                <div class="col">
+                    <div class="reward-item reward-yellow p-3 rounded-3 d-flex flex-column justify-content-center align-items-center">
+                        <i class="bi bi-trophy fs-3 reward-icon mb-2"></i>
+                        <p class="mb-0 small fw-bold">Primeros pasos</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="reward-item reward-blue p-3 rounded-3 d-flex flex-column justify-content-center align-items-center">
+                        <i class="bi bi-percent fs-3 reward-icon mb-2"></i>
+                        <p class="mb-0 small fw-bold">Ahorro Constante</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="reward-item reward-green p-3 rounded-3 d-flex flex-column justify-content-center align-items-center">
+                        <i class="bi bi-tags fs-3 reward-icon mb-2"></i>
+                        <p class="mb-0 small fw-bold">Meta Alcanzada</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="history-section mb-4">
+            <h4 class="section-title mb-3">Últimos Ahorros</h4>
+            <div class="profile-card-transparent p-3">
+                <div id="last10SavingsList" class="history-list-compact">
+                    </div>
+                <div class="d-grid mt-3">
+                    <button id="viewFullHistoryBtn" class="btn btn-link fw-bold">Ver Historial Completo</button>
+                </div>
+            </div>
+        </div>
+
+        <button id="backFromProfileButton" class="back-button w-100 mt-4">
+            Volver a la pantalla principal
+        </button>
+    </div>
+
     <div class="modal fade history-modal" id="historyModal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal_historial modal-content overflow-hidden">
@@ -508,11 +945,11 @@
             ></button>
           </div>
           <div class="modal-body p-0">
-            <div id="historyList" class="px-3"></div>
+            <div id="historyList" class="px-3 py-2"></div>
           </div>
           <div class="area_boton_historial">
             <button
-              class="boton_historial btn-primary rounded-0 py-3"
+              class="boton_historial btn-primary py-3"
               data-bs-dismiss="modal"
             >
               Cerrar Historial
@@ -522,7 +959,6 @@
       </div>
     </div>
 
-    <!-- Modal Confirmación Reinicio -->
     <div class="modal fade" id="confirmModal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -554,14 +990,12 @@
       </div>
     </div>
 
-    <!-- Bootstrap 5.3.3 JS Bundle con Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
       document.addEventListener('DOMContentLoaded', function () {
         // Elementos del DOM
         const currentDateEl = document.getElementById('currentDate');
-        const statsCurrentDateEl = document.getElementById('statsCurrentDate');
         const progressTextEl = document.getElementById('progressText');
         const remainingTextEl = document.getElementById('remainingText');
         const progressBarEl = document.getElementById('progressBar');
@@ -576,9 +1010,37 @@
         const resetBtn = document.getElementById('resetBtn');
         const historyListEl = document.getElementById('historyList');
         const confirmResetBtn = document.getElementById('confirmReset');
-        const backButton = document.getElementById('backButton');
+
+        // Contenedores de las pantallas
         const mainContainer = document.querySelector('.main-container');
         const statsContainer = document.getElementById('statsContainer');
+        const profileContainer = document.getElementById('profileContainer');
+
+        // Botones de navegación entre pantallas
+        const showProfileBtn = document.getElementById('showProfileBtn');
+        const showStatsBtnMain = document.getElementById('showStats'); // Renombrado para evitar conflicto si existe otro
+        const backButtonStats = document.getElementById('backButtonStats'); // Nuevo botón de retroceso en estadísticas
+        const backToMainFromProfileBtn = document.getElementById('backToMainFromProfile');
+        const backFromProfileButton = document.getElementById('backFromProfileButton'); // Botón inferior de volver
+
+        // Nuevos elementos DOM para el perfil y botones de acción
+        const monthlyAvgSavingsEl = document.getElementById('monthlyAvgSavings');
+        const totalSavingsProfileEl = document.getElementById('totalSavingsProfile');
+        const last10SavingsListEl = document.getElementById('last10SavingsList');
+        const viewFullHistoryBtn = document.getElementById('viewFullHistoryBtn');
+
+        // Nuevos botones de acción "Ahorrar" y "Posponer"
+        const saveButton = document.createElement('button');
+        saveButton.id = 'saveCurrentCard';
+        saveButton.className = 'boton_primario btn btn-primary flex-grow-1 py-2';
+        saveButton.textContent = 'Ahorrar';
+
+        const postponeButton = document.createElement('button');
+        postponeButton.id = 'postponeCurrentCard';
+        postponeButton.className = 'boton_secundario btn btn-outline-primary flex-grow-1 py-2';
+        postponeButton.textContent = 'Posponer';
+
+        let currentDrawnNumber = null; // Para guardar el número que se acaba de sacar
 
         // Variables para gráficas
         let dailyChart = null;
@@ -586,34 +1048,49 @@
         // Nueva variable para controlar la semana seleccionada
         let currentWeek = 0; // 0 = última semana
 
+        // Datos de la aplicación
+        const cards = Array.from({ length: 365 }, (_, i) => i + 1);
+        let remainingCards = [...cards];
+        // Modificación aquí: drawnCards ahora guardará objetos { value: number, saved: boolean, date: string, day: number }
+        let drawnCards = JSON.parse(localStorage.getItem('drawnCards')) || [];
+        let postponedCards = JSON.parse(localStorage.getItem('postponedCards')) || []; // Nuevo array para pospuestos
+
         // Lógica para ocultar splash
         window.addEventListener('load', () => {
           setTimeout(() => {
             document.body.classList.add('loaded');
-          }, 2500);
+            mainContainer.style.display = 'block'; // Mostrar la pantalla principal al finalizar el splash
+          }, 2500); // Mantiene el splash por 2.5 segundos
         });
 
         // Modales de Bootstrap
         const historyModal = new bootstrap.Modal('#historyModal');
         const confirmModal = new bootstrap.Modal('#confirmModal');
 
-        // Datos de la aplicación
-        const cards = Array.from({ length: 365 }, (_, i) => i + 1);
-        let remainingCards = [...cards];
-        let drawnCards = JSON.parse(localStorage.getItem('drawnCards')) || [];
-
         // Inicializar aplicación
+        loadProgress(); // Cargar progreso al inicio
         updateDate();
         updateProgress();
         updateTotalSavings();
 
+
         // Event Listeners
         drawCardBtn.addEventListener('click', drawCard);
         showHistoryBtn.addEventListener('click', showHistory);
-        showStatsBtn.addEventListener('click', showStats);
+        showStatsBtnMain.addEventListener('click', showStats); // Usar showStatsBtnMain
         resetBtn.addEventListener('click', () => confirmModal.show());
         confirmResetBtn.addEventListener('click', resetProgress);
-        backButton.addEventListener('click', hideStats);
+        
+        // Navegación entre pantallas
+        showProfileBtn.addEventListener('click', showProfile);
+        backButtonStats.addEventListener('click', hideStats); // Botón de retroceso de estadísticas
+        backToMainFromProfileBtn.addEventListener('click', hideProfile);
+        backFromProfileButton.addEventListener('click', hideProfile); // Botón inferior de volver desde perfil
+        viewFullHistoryBtn.addEventListener('click', showHistory); // Botón "Ver Historial Completo" del perfil
+
+        // Event Listeners para los nuevos botones de acción
+        saveButton.addEventListener('click', () => handleCardAction(true));
+        postponeButton.addEventListener('click', () => handleCardAction(false));
 
         // Funciones
         function updateDate() {
@@ -622,11 +1099,11 @@
             today.getMonth() + 1
           }/${today.getFullYear()}`;
           currentDateEl.textContent = dateStr;
-          statsCurrentDateEl.textContent = dateStr;
         }
 
         function updateProgress() {
-          const drawnCount = drawnCards.length;
+          // El progreso se calcula en base a todas las tarjetas que ya fueron "sacadas"
+          const drawnCount = drawnCards.length + postponedCards.length;
           const remainingCount = cards.length - drawnCount;
           const progressPercent = (drawnCount / cards.length) * 100;
 
@@ -636,21 +1113,53 @@
         }
 
         function updateTotalSavings() {
-          const total = drawnCards.reduce((sum, num) => sum + num, 0);
+          // El ahorro total solo cuenta los "ahorrados" (saved: true)
+          const total = drawnCards.reduce((sum, item) => sum + item.value, 0);
           totalSavingsEl.textContent = `$${total.toLocaleString()}`;
           statsTotalSavingsEl.textContent = `$${total.toLocaleString()}`;
+        }
+
+        // Nueva función para gestionar la visibilidad de los botones "Ahorrar" y "Posponer"
+        function toggleActionButtons(show) {
+            const botonesDiv = document.querySelector('.ahorro .botones');
+            // Remover botones existentes si están
+            const existingSaveBtn = document.getElementById('saveCurrentCard');
+            const existingPostponeBtn = document.getElementById('postponeCurrentCard');
+            if (existingSaveBtn) botonesDiv.removeChild(existingSaveBtn);
+            if (existingPostponeBtn) botonesDiv.removeChild(existingPostponeBtn);
+
+            // Si se debe mostrar el "Sacar Tarjeta" y los otros botones originales
+            if (!show) {
+                drawCardBtn.style.display = 'block';
+                showHistoryBtn.style.display = 'block';
+                showStatsBtnMain.style.display = 'block';
+                botonesDiv.classList.remove('action-buttons'); // Remover clase de botones de acción
+            } else {
+                // Ocultar "Sacar Tarjeta" y mostrar "Ahorrar" y "Posponer"
+                drawCardBtn.style.display = 'none';
+                showHistoryBtn.style.display = 'none';
+                showStatsBtnMain.style.display = 'none';
+
+                botonesDiv.prepend(postponeButton); // Posponer primero
+                botonesDiv.prepend(saveButton); // Ahorrar segundo (para que aparezca primero visualmente)
+                botonesDiv.classList.add('action-buttons'); // Añadir clase para estilos de fila
+            }
         }
 
         function drawCard() {
           if (remainingCards.length === 0) {
             cardDisplayEl.textContent = '¡Reto completado!';
             cardDisplayEl.classList.add('bg-primary', 'text-white');
+            lastNumberEl.textContent = ''; // Limpiar mensaje del último número
+            toggleActionButtons(false); // Asegurarse de que no salgan los botones de acción si el reto está completado
             return;
           }
 
-          // Seleccionar número aleatorio
+          toggleActionButtons(true); // Mostrar botones "Ahorrar" y "Posponer"
+
           const randomIndex = Math.floor(Math.random() * remainingCards.length);
           const drawnNumber = remainingCards[randomIndex];
+          currentDrawnNumber = drawnNumber; // Guardar el número actual
 
           // Animación
           cardDisplayEl.style.transform = 'scale(0.9)';
@@ -659,32 +1168,69 @@
             cardDisplayEl.style.transform = 'scale(1)';
           }, 200);
 
-          // Actualizar datos
-          drawnCards.push(drawnNumber);
-          remainingCards = remainingCards.filter((n) => n !== drawnNumber);
-          lastNumberEl.textContent = `Último número: ${drawnNumber}`;
+          lastNumberEl.textContent = `Número sacado: $${drawnNumber}`;
+        }
 
-          // Guardar y actualizar UI
-          saveProgress();
-          updateProgress();
-          updateTotalSavings();
+        function handleCardAction(saved) {
+            if (currentDrawnNumber === null) return; // No hay número para procesar
+
+            const actionDate = new Date().toISOString().split('T')[0]; // Fecha actual en formato ISO-MM-DD
+            const dayCounter = drawnCards.length + postponedCards.length + 1; // Día consecutivo del reto
+
+            const newEntry = {
+                value: currentDrawnNumber,
+                saved: saved,
+                date: actionDate,
+                day: dayCounter
+            };
+
+            // Eliminar el número del pool de remainingCards
+            remainingCards = remainingCards.filter((n) => n !== currentDrawnNumber);
+
+            if (saved) {
+                drawnCards.push(newEntry);
+            } else {
+                postponedCards.push(newEntry);
+            }
+
+            currentDrawnNumber = null; // Reiniciar el número actual
+            cardDisplayEl.textContent = ''; // Limpiar la tarjeta
+            lastNumberEl.textContent = ''; // Limpiar el texto
+
+            toggleActionButtons(false); // Volver a mostrar "Sacar Tarjeta" y ocultar los de acción
+
+            saveProgress(); // Guardar ambos arrays
+            updateProgress();
+            updateTotalSavings();
         }
 
         function showHistory() {
           historyListEl.innerHTML = '';
 
-          if (drawnCards.length === 0) {
+          // Combinar todos los elementos y ordenar por día de forma ascendente
+          const allHistoryItems = [...drawnCards, ...postponedCards].sort((a, b) => a.day - b.day);
+
+          if (allHistoryItems.length === 0) {
             historyListEl.innerHTML =
               '<div class="py-3 text-center text-muted">No hay historial disponible</div>';
           } else {
-            drawnCards.forEach((num, idx) => {
-              const item = document.createElement('div');
-              item.className = 'history-item d-flex justify-content-between';
-              item.innerHTML = `
-                            <span>Día ${idx + 1}</span>
-                            <span class="fw-bold">$${num}</span>
-                        `;
-              historyListEl.appendChild(item);
+            allHistoryItems.forEach((item) => {
+                const iconClass = item.saved ? 'bi-arrow-down-right' : 'bi-arrow-up-left'; // Flecha hacia abajo para ahorrado, hacia arriba para pospuesto
+                const iconBgColor = item.saved ? 'icon-credit' : 'icon-debit';
+
+                const listItem = document.createElement('div');
+                listItem.className = 'history-item';
+                listItem.innerHTML = `
+                    <div class="icon-wrapper ${iconBgColor}">
+                        <i class="bi ${iconClass}"></i>
+                    </div>
+                    <div class="item-details flex-grow-1">
+                        <p class="mb-0 fw-bold">${item.saved ? 'Ahorro registrado' : 'Ahorro pospuesto'}</p>
+                        <span class="small">${item.date} - Día ${item.day}</span>
+                    </div>
+                    <div class="item-amount fw-bold">$${item.value.toLocaleString()}</div>
+                `;
+                historyListEl.appendChild(listItem);
             });
           }
 
@@ -693,6 +1239,7 @@
 
         function showStats() {
           mainContainer.style.display = 'none';
+          profileContainer.style.display = 'none'; // Asegurarse de ocultar también el perfil
           statsContainer.style.display = 'block';
           updateCharts();
         }
@@ -711,20 +1258,21 @@
             monthlyChart.destroy();
           }
 
-          // Datos para gráfica diaria
-          const dailyData = drawnCards.map((amount, index) => ({
-            day: index + 1,
-            amount,
+          // dailyData y monthlyData se basarán en los elementos ahorrados de `drawnCards`
+          const dailyDataForChart = drawnCards.map((item, index) => ({
+              day: item.day, // Usar el día del reto
+              amount: item.value,
+              date: item.date // Opcional, para tooltips detallados
           }));
 
           // Actualizar selector de semanas
-          updateWeekSelector(dailyData.length);
+          updateWeekSelector(dailyDataForChart.length);
 
           // Filtrar datos según la semana seleccionada
-          const filteredDailyData = filterDataByWeek(dailyData, currentWeek);
+          const filteredDailyData = filterDataByWeek(dailyDataForChart, currentWeek);
 
           // Calcular datos mensuales
-          const monthlyData = calculateMonthlyData(drawnCards); // <-- Esta línea es crucial
+          const monthlyData = calculateMonthlyData(drawnCards); // Calcular solo de ahorros reales
 
           // Crear gráfica diaria
           const dailyCtx = document
@@ -738,9 +1286,10 @@
                 {
                   label: 'Ahorro diario',
                   data: filteredDailyData.map((item) => item.amount),
-                  backgroundColor: '#c5e861',
-                  borderColor: '#1b2020',
+                  backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--app-primary'), // Usa la variable CSS
+                  borderColor: getComputedStyle(document.documentElement).getPropertyValue('--app-dark'), // Usa la variable CSS
                   borderWidth: 1,
+                  borderRadius: 5, // Bordes redondeados para las barras
                 },
               ],
             },
@@ -750,6 +1299,13 @@
                 legend: {
                   display: false,
                 },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Ahorro: $${context.parsed.y.toLocaleString()}`;
+                        }
+                    }
+                }
               },
               scales: {
                 y: {
@@ -757,13 +1313,30 @@
                   title: {
                     display: true,
                     text: 'Cantidad ($)',
+                    color: getComputedStyle(document.documentElement).getPropertyValue('--profile-text-light')
                   },
+                  ticks: {
+                    callback: function(value, index, values) {
+                      return '$' + value.toLocaleString(); // Formato de moneda
+                    },
+                    color: getComputedStyle(document.documentElement).getPropertyValue('--profile-text-muted')
+                  },
+                  grid: {
+                    color: 'rgba(255, 255, 255, 0.1)' // Líneas de grid suaves para fondo oscuro
+                  }
                 },
                 x: {
                   title: {
                     display: true,
                     text: 'Días',
+                    color: getComputedStyle(document.documentElement).getPropertyValue('--profile-text-light')
                   },
+                  ticks: {
+                    color: getComputedStyle(document.documentElement).getPropertyValue('--profile-text-muted')
+                  },
+                  grid: {
+                    display: false // No mostrar líneas de grid en el eje X
+                  }
                 },
               },
             },
@@ -781,11 +1354,16 @@
                 {
                   label: 'Ahorro mensual',
                   data: monthlyData.map((item) => item.total),
-                  backgroundColor: '#c5e861',
-                  borderColor: '#1b2020',
+                  backgroundColor: 'rgba(163, 255, 66, 0.3)', // Color con opacidad para el área
+                  borderColor: getComputedStyle(document.documentElement).getPropertyValue('--app-primary'), /* Usa el verde para el borde de la línea */
                   borderWidth: 2,
                   fill: true,
-                  tension: 0.4,
+                  tension: 0.4, // Curvatura de la línea
+                  pointBackgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--app-primary'),
+                  pointBorderColor: getComputedStyle(document.documentElement).getPropertyValue('--profile-bg'), /* Fondo oscuro del punto */
+                  pointBorderWidth: 2,
+                  pointRadius: 5,
+                  pointHoverRadius: 7,
                 },
               ],
             },
@@ -795,6 +1373,13 @@
                 legend: {
                   display: false,
                 },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Total: $${context.parsed.y.toLocaleString()}`;
+                        }
+                    }
+                }
               },
               scales: {
                 y: {
@@ -802,13 +1387,30 @@
                   title: {
                     display: true,
                     text: 'Total ($)',
+                    color: getComputedStyle(document.documentElement).getPropertyValue('--profile-text-light')
                   },
+                  ticks: {
+                    callback: function(value, index, values) {
+                      return '$' + value.toLocaleString(); // Formato de moneda
+                    },
+                    color: getComputedStyle(document.documentElement).getPropertyValue('--profile-text-muted')
+                  },
+                  grid: {
+                    color: 'rgba(255, 255, 255, 0.1)'
+                  }
                 },
                 x: {
                   title: {
                     display: true,
                     text: 'Meses',
+                    color: getComputedStyle(document.documentElement).getPropertyValue('--profile-text-light')
                   },
+                  ticks: {
+                    color: getComputedStyle(document.documentElement).getPropertyValue('--profile-text-muted')
+                  },
+                  grid: {
+                    display: false
+                  }
                 },
               },
             },
@@ -839,12 +1441,15 @@
           // Establecer el valor seleccionado
           weekSelector.value = currentWeek;
 
-          // Event listener para cambios en el selector
-          weekSelector.addEventListener('change', function () {
+          // Event listener para cambios en el selector (asegurarse de que solo haya uno)
+          weekSelector.removeEventListener('change', handleWeekChange); // Remover el anterior
+          weekSelector.addEventListener('change', handleWeekChange); // Añadir el nuevo
+        }
+
+        function handleWeekChange() {
             currentWeek = parseInt(this.value);
             updateCharts();
             updateChartNote();
-          });
         }
 
         // Función para filtrar datos por semana
@@ -869,62 +1474,134 @@
           }
         }
 
-        function calculateMonthlyData(drawnCards) {
-          // Agrupar ahorros por mes
-          const today = new Date();
-          const currentYear = today.getFullYear();
-          const months = [
-            'Ene',
-            'Feb',
-            'Mar',
-            'Abr',
-            'May',
-            'Jun',
-            'Jul',
-            'Ago',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dic',
-          ];
+        // Modificar calculateMonthlyData para usar el nuevo formato de `drawnCards`
+        function calculateMonthlyData(cardsArray) {
+            const today = new Date();
+            const currentYear = today.getFullYear();
+            const months = [
+                'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+                'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
+            ];
 
-          const monthlyTotals = Array(12).fill(0);
-          const monthlyCounts = Array(12).fill(0);
+            const monthlyTotals = Array(12).fill(0);
 
-          // Simular fechas para cada día ahorrado
-          drawnCards.forEach((amount, index) => {
-            const dayOfYear = index + 1;
-            const date = new Date(currentYear, 0); // 1 de enero del año actual
-            date.setDate(dayOfYear); // Avanzar al día correspondiente
-            const month = date.getMonth(); // 0-11
-            monthlyTotals[month] += amount;
-            monthlyCounts[month]++;
-          });
+            cardsArray.forEach(item => {
+                if (item.saved) { // Solo cuenta los ahorros reales para los totales mensuales
+                    const itemDate = new Date(item.date); // Parsear la fecha del objeto
+                    const month = itemDate.getMonth(); // 0-11
+                    monthlyTotals[month] += item.value;
+                }
+            });
 
-          // Crear array de objetos con nombre de mes y total
-          return months.map((monthName, index) => ({
-            month: monthName,
-            total: monthlyTotals[index],
-            days: monthlyCounts[index], // Días con ahorro en el mes
-          }));
+            return months.map((monthName, index) => ({
+                month: monthName,
+                total: monthlyTotals[index],
+            }));
         }
 
         function resetProgress() {
-          drawnCards = [];
-          remainingCards = [...cards];
-          cardDisplayEl.textContent = '';
-          cardDisplayEl.classList.remove('bg-primary', 'text-white');
-          lastNumberEl.textContent = '';
+            drawnCards = [];
+            postponedCards = []; // Limpiar pospuestos también
+            remainingCards = [...cards]; // Restaurar todas las tarjetas
+            cardDisplayEl.textContent = '';
+            cardDisplayEl.classList.remove('bg-primary', 'text-white');
+            lastNumberEl.textContent = '';
+            currentDrawnNumber = null; // Reiniciar
+            toggleActionButtons(false); // Volver a mostrar "Sacar Tarjeta"
 
-          saveProgress();
-          updateProgress();
-          updateTotalSavings();
+            saveProgress();
+            updateProgress();
+            updateTotalSavings();
+            if (dailyChart) dailyChart.destroy(); // Destruir gráficos if exist to clear them
+            if (monthlyChart) monthlyChart.destroy();
+            // No llamar updateCharts() directamente aquí, se actualizarán cuando se acceda a la vista de estadísticas
+            // updateProfile(); // Actualizar perfil if visible
 
-          confirmModal.hide();
+            confirmModal.hide();
         }
 
         function saveProgress() {
-          localStorage.setItem('drawnCards', JSON.stringify(drawnCards));
+            localStorage.setItem('drawnCards', JSON.stringify(drawnCards));
+            localStorage.setItem('postponedCards', JSON.stringify(postponedCards)); // Guardar los pospuestos
+        }
+
+        function loadProgress() {
+            const storedDrawnCards = localStorage.getItem('drawnCards');
+            if (storedDrawnCards) {
+                drawnCards = JSON.parse(storedDrawnCards);
+            }
+            const storedPostponedCards = localStorage.getItem('postponedCards');
+            if (storedPostponedCards) {
+                postponedCards = JSON.parse(storedPostponedCards);
+            }
+
+            // Reconstruir remainingCards a partir de `cards` y excluyendo lo que ya está en `drawnCards` y `postponedCards`
+            const allUsedNumbers = new Set();
+            drawnCards.forEach(item => allUsedNumbers.add(item.value));
+            postponedCards.forEach(item => allUsedNumbers.add(item.value));
+            remainingCards = cards.filter(card => !allUsedNumbers.has(card));
+        }
+
+        // Nueva función para mostrar la pantalla de perfil
+        function showProfile() {
+            mainContainer.style.display = 'none';
+            statsContainer.style.display = 'none'; // Asegurarse de ocultar también las estadísticas
+            profileContainer.style.display = 'block';
+            updateProfile(); // Cargar los datos del perfil
+        }
+
+        function hideProfile() {
+            profileContainer.style.display = 'none';
+            mainContainer.style.display = 'block';
+        }
+
+        function updateProfile() {
+            // Calcular balance de ahorro (media por mes)
+            const monthlyData = calculateMonthlyData(drawnCards); // Usar solo drawnCards para el balance de ahorro real
+            let totalMonthlySavings = 0;
+            let monthsWithSavings = 0;
+            monthlyData.forEach(month => {
+                if (month.total > 0) {
+                    totalMonthlySavings += month.total;
+                    monthsWithSavings++;
+                }
+            });
+            const monthlyAvg = monthsWithSavings > 0 ? totalMonthlySavings / monthsWithSavings : 0;
+            monthlyAvgSavingsEl.textContent = `$${monthlyAvg.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+
+            // Ahorro total
+            const total = drawnCards.reduce((sum, item) => sum + item.value, 0);
+            totalSavingsProfileEl.textContent = `$${total.toLocaleString()}`;
+
+            // Últimos 10 ahorros
+            last10SavingsListEl.innerHTML = '';
+            // Combinar todos los elementos y ordenar por día de forma descendente
+            const allHistoryItems = [...drawnCards, ...postponedCards].sort((a, b) => b.day - a.day);
+            const last10Items = allHistoryItems.slice(0, 10);
+
+            if (last10Items.length === 0) {
+                last10SavingsListEl.innerHTML = '<p class="text-center text-profile-muted small py-3">No hay ahorros recientes.</p>';
+            } else {
+                last10Items.forEach(item => {
+                    const iconClass = item.saved ? 'bi-arrow-down-right' : 'bi-arrow-up-left'; // Flecha abajo para ahorrado, arriba para pospuesto
+                    const iconBgColor = item.saved ? 'icon-credit' : 'icon-debit';
+                    const amountColorClass = item.saved ? 'amount-credit' : 'amount-debit';
+
+                    const listItem = document.createElement('div');
+                    listItem.className = 'history-item-profile d-flex align-items-center';
+                    listItem.innerHTML = `
+                        <div class="icon-wrapper ${iconBgColor}">
+                            <i class="bi ${iconClass}"></i>
+                        </div>
+                        <div class="item-details">
+                            <p class="mb-0 fw-bold">${item.saved ? 'Ahorro registrado' : 'Ahorro pospuesto'}</p>
+                            <span class="small">${item.date} - Día ${item.day}</span>
+                        </div>
+                        <div class="item-amount ${amountColorClass}">$${item.value.toLocaleString()}</div>
+                    `;
+                    last10SavingsListEl.appendChild(listItem);
+                });
+            }
         }
       });
     </script>
