@@ -12,15 +12,18 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
       /* Variables CSS actualizadas para una estética moderna con tema oscuro */
       :root {
-        --app-primary: #c5e861; /* Verde vibrante similar al de la app de referencia */
-        --app-dark: #1A1A1A; /* Casi negro para elementos clave y fondos */
-        --app-light-bg: #F0F2F5; /* Un gris muy claro para el fondo general (original) */
+        --app-primary: #c5e861; /* Verde vibrante actualizado */
+        --app-dark: #1a1a1a; /* Casi negro para elementos clave y fondos */
+        --app-light-bg: #f0f2f5; /* Un gris muy claro para el fondo general (original) */
 
         /* Nuevos colores para el tema oscuro */
         --profile-bg: #1e1e1e; /* Fondo principal oscuro */
@@ -37,11 +40,18 @@
         /* Colores para el historial de transacciones */
         --history-debit-red: #ff6b6b; /* Rojo para "To" (débito/pospuesto) */
         --history-credit-green: #6bff6b; /* Verde para "From" (crédito/ahorrado) */
+
+        --color-saved-amount: var(
+          --history-credit-green
+        ); /* Verde para el monto ahorrado */
+        --color-postponed-amount: var(
+          --history-debit-red
+        ); /* Rojo para el monto pospuesto */
       }
 
       body {
         background-color: var(--profile-bg); /* Fondo oscuro principal */
-        font-family: 'Inter', sans-serif; /* Usando la fuente Inter para un look moderno */
+        font-family: "Inter", sans-serif; /* Usando la fuente Inter para un look moderno */
         color: var(--profile-text-light); /* Color de texto principal claro */
       }
 
@@ -94,8 +104,11 @@
       }
 
       /* Ocultar contenedores al inicio */
-      .main-container, .stats-container, .profile-container {
-          display: none;
+      .main-container,
+      .stats-container,
+      .profile-container,
+      .actual-savings-container {
+        display: none;
       }
 
       body.loaded .main-content {
@@ -108,7 +121,9 @@
         border-radius: 20px; /* Bordes más redondeados */
         padding: 32px;
         overflow: hidden;
-        background-color: var(--profile-card-bg); /* Fondo oscuro para el contenedor principal */
+        background-color: var(
+          --profile-card-bg
+        ); /* Fondo oscuro para el contenedor principal */
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada y oscura */
       }
 
@@ -121,20 +136,18 @@
         margin: 0 0 24px 0; /* Más espacio debajo del header */
       }
 
-      .header .avatar {
-        width: 70px;
-        height: 70px;
-        border: solid 3px var(--app-primary); /* Borde con el nuevo color primario */
-        border-radius: 50%; /* Asegura que la imagen de perfil sea completamente redonda */
-        overflow: hidden; /* Para que la imagen no se desborde del círculo */
+      /* Estilo para el botón de abrir el offcanvas */
+      .header .hamburger-button {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        margin-right: 16px; /* Espacio a la derecha del botón de hamburguesa */
       }
 
-      .header .avatar img {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        object-fit: cover;
-        object-position: top;
+      .header .hamburger-button i {
+        color: var(--profile-text-light); /* Color del icono de hamburguesa */
+        font-size: 1.8rem;
       }
 
       .header-text {
@@ -184,7 +197,9 @@
       .ahorro {
         padding: 32px;
         display: flex;
-        background-color: var(--app-dark); /* Fondo oscuro para la sección de ahorro total */
+        background-color: var(
+          --app-dark
+        ); /* Fondo oscuro para la sección de ahorro total */
         border-radius: 16px; /* Bordes redondeados consistentes */
         color: white;
         flex-direction: column;
@@ -197,23 +212,41 @@
         margin: 0;
       }
 
+      /* Estilos para el nuevo "Ahorro real" en la pantalla principal */
+      .ahorro .saving-labels {
+        display: flex;
+        align-items: baseline; /* Alinea por la base del texto */
+        gap: 8px; /* Espacio entre los dos textos */
+      }
+
+      .ahorro .saving-labels .main-label {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin: 0;
+      }
+
+      .ahorro .saving-labels .sub-label {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.5); /* Más opaco */
+        margin: 0;
+      }
+
       .ahorro h1 {
         font-size: 3.5rem; /* Agrandar el número de ahorro total */
         font-weight: 800; /* Más audaz */
         margin-bottom: 24px; /* Más espacio antes de los botones */
       }
 
-
       .ahorro .botones {
         flex-direction: column; /* Predeterminado para la pantalla principal */
         gap: 15px; /* Espacio entre los botones */
       }
-      .ahorro .botones.action-buttons { /* Clase para los botones de Ahorrar/Posponer */
+      .ahorro .botones.action-buttons {
+        /* Clase para los botones de Ahorrar/Posponer */
         flex-direction: row; /* En fila para Ahorrar/Posponer */
         flex-wrap: wrap; /* Permite que se envuelvan */
         justify-content: center; /* Centrar los botones */
       }
-
 
       .botones .boton_primario {
         background-color: var(--app-primary) !important;
@@ -252,7 +285,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(45deg, var(--app-primary), #d9ff99); /* Gradiente de verde */
+        background: linear-gradient(
+          45deg,
+          var(--app-primary),
+          #d9ff99
+        ); /* Gradiente de verde */
         color: var(--app-dark); /* Texto oscuro */
         border-radius: 18px; /* Ligeramente menos redondeado que los contenedores */
         box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Sombra para la tarjeta */
@@ -290,12 +327,14 @@
         overflow-y: auto; /* Habilita el scroll vertical */
       }
 
-      .modal_historial.modal-content { /* Clase para el contenido del modal */
+      .modal_historial.modal-content {
+        /* Clase para el contenido del modal */
         border-radius: 20px; /* Bordes redondeados para el modal */
         overflow: hidden; /* Asegura que el contenido se ajuste al border-radius */
       }
 
-      .history-item { /* Estilo para el historial dentro del modal */
+      .history-item {
+        /* Estilo para el historial dentro del modal */
         display: flex;
         align-items: center;
         padding: 0.75rem 0;
@@ -308,48 +347,69 @@
       }
 
       .history-item .icon-wrapper {
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-right: 15px;
-          flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 15px;
+        flex-shrink: 0;
       }
 
       .history-item .icon-wrapper i {
-          font-size: 1.2rem;
-          color: white;
+        font-size: 1.2rem;
+        color: white;
       }
 
-      .history-item .icon-debit { /* Para flecha de posponer/no guardado en modal */
-          background-color: var(--history-debit-red);
+      .history-item .icon-debit {
+        /* Para flecha de posponer/no guardado en modal */
+        background-color: var(--history-debit-red);
       }
-      .history-item .icon-credit { /* Para flecha de guardado/ahorro real en modal */
-          background-color: var(--history-credit-green);
+      .history-item .icon-credit {
+        /* Para flecha de guardado/ahorro real en modal */
+        background-color: var(--history-credit-green);
       }
 
       .history-item .item-details {
-          flex-grow: 1;
+        flex-grow: 1;
       }
       .history-item .item-details p {
-          margin-bottom: 2px;
-          font-size: 0.95rem;
-          color: white;
+        margin-bottom: 2px;
+        font-size: 0.95rem;
+        color: white;
       }
       .history-item .item-details span {
-          font-size: 0.8rem;
-          color: rgba(255, 255, 255, 0.7);
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.7);
       }
       .history-item .item-amount {
-          font-weight: 700;
-          font-size: 1.1rem;
-          margin-left: 15px;
-          flex-shrink: 0;
-          color: var(--app-primary); /* Monto en verde vibrante */
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-left: 15px;
+        flex-shrink: 0;
+        color: var(--app-primary); /* Monto en verde vibrante */
       }
 
+      .history-item .action-button {
+        /* Estilo para el botón de acción dentro del historial */
+        margin-left: 15px;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: all 0.2s ease-in-out;
+      }
+
+      .history-item .action-button.btn-primary {
+        background-color: var(--app-primary);
+        color: var(--app-dark);
+        border: none;
+      }
+
+      .history-item .action-button.btn-primary:hover {
+        background-color: #7ecc31; /* Un verde un poco más oscuro al pasar el ratón */
+      }
 
       .history-modal .modal-header {
         background: var(--app-dark);
@@ -358,8 +418,8 @@
         padding: 1.5rem;
       }
       .history-modal .btn-close-white {
-          color: var(--app-primary) !important; /* El botón de cerrar en verde */
-          filter: invert(1); /* Hack para cambiar el color del icono de cerrar */
+        color: var(--app-primary) !important; /* El botón de cerrar en verde */
+        filter: invert(1); /* Hack para cambiar el color del icono de cerrar */
       }
 
       .area_boton_historial {
@@ -388,7 +448,9 @@
       }
 
       .chart-container {
-        background-color: var(--profile-card-bg); /* Fondo oscuro para las tarjetas de gráfico */
+        background-color: var(
+          --profile-card-bg
+        ); /* Fondo oscuro para las tarjetas de gráfico */
         border-radius: 16px; /* Bordes redondeados */
         padding: 20px;
         margin-bottom: 20px;
@@ -407,15 +469,17 @@
       }
 
       .nav-tabs {
-          border-bottom: none; /* Quitar la línea inferior por defecto de Bootstrap */
+        border-bottom: none; /* Quitar la línea inferior por defecto de Bootstrap */
       }
       .nav-tabs .nav-item {
-          flex-grow: 1; /* Para que las pestañas ocupen el espacio equitativamente */
-          text-align: center;
+        flex-grow: 1; /* Para que las pestañas ocupen el espacio equitativamente */
+        text-align: center;
       }
 
       .nav-tabs .nav-link {
-        color: var(--profile-text-muted); /* Color de texto normal para pestañas */
+        color: var(
+          --profile-text-muted
+        ); /* Color de texto normal para pestañas */
         font-weight: 600;
         border: none;
         padding: 12px 0; /* Padding vertical para las pestañas */
@@ -424,9 +488,15 @@
       }
 
       .nav-tabs .nav-link.active {
-        color: var(--app-primary); /* Texto verde vibrante para la pestaña activa */
-        background-color: var(--profile-card-bg); /* Fondo oscuro para la pestaña activa */
-        border-color: var(--profile-card-bg); /* Borde con el mismo color para que se vea sólido */
+        color: var(
+          --app-primary
+        ); /* Texto verde vibrante para la pestaña activa */
+        background-color: var(
+          --profile-card-bg
+        ); /* Fondo oscuro para la pestaña activa */
+        border-color: var(
+          --profile-card-bg
+        ); /* Borde con el mismo color para que se vea sólido */
       }
 
       .tab-content {
@@ -449,7 +519,6 @@
         transform: translateY(-2px);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
       }
-
 
       .chart-controls {
         display: flex;
@@ -484,223 +553,455 @@
 
       /* Modal de Confirmación de Reinicio - Bootstrap por defecto es generalmente bueno, solo ajustamos colores */
       .modal-content {
-          border-radius: 12px;
-          background-color: var(--profile-card-bg); /* Fondo oscuro */
-          color: var(--profile-text-light); /* Texto claro */
+        border-radius: 12px;
+        background-color: var(--profile-card-bg); /* Fondo oscuro */
+        color: var(--profile-text-light); /* Texto claro */
       }
       .modal-header {
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Borde claro */
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Borde claro */
       }
       .modal-title {
-          color: var(--profile-text-light);
+        color: var(--profile-text-light);
       }
       .modal-footer {
-          border-top: 1px solid rgba(255, 255, 255, 0.1); /* Borde claro */
+        border-top: 1px solid rgba(255, 255, 255, 0.1); /* Borde claro */
       }
       .modal-footer .btn-secondary {
-          background-color: var(--profile-text-muted);
-          border-color: var(--profile-text-muted);
-          color: var(--app-dark);
+        background-color: var(--profile-text-muted);
+        border-color: var(--profile-text-muted);
+        color: var(--app-dark);
       }
       .modal-footer .btn-danger {
-          background-color: #dc3545;
-          border-color: #dc3545;
-          color: var(--profile-text-light); /* Usar variable de texto claro para botones de peligro */
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: var(
+          --profile-text-light
+        ); /* Usar variable de texto claro para botones de peligro */
       }
       .btn-close {
-          filter: invert(1); /* Para que el icono sea blanco */
+        filter: invert(1); /* Para que el icono sea blanco */
       }
 
+      /* --- Estilos para Offcanvas (Menú Hamburguesa) --- */
+      .offcanvas {
+        background-color: var(--profile-bg); /* Fondo del menú lateral */
+        color: var(--profile-text-light);
+        width: 280px; /* Ancho fijo del offcanvas */
+      }
+      .offcanvas-header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 1.5rem;
+        padding-top: 1.5rem;
+      }
+      .offcanvas-title {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+      .offcanvas-title .avatar {
+        width: 50px;
+        height: 50px;
+        border: solid 2px var(--app-primary);
+        border-radius: 50%;
+        overflow: hidden;
+      }
+      .offcanvas-title .avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Asegura que la imagen cubra el círculo */
+        object-position: top;
+        aspect-ratio: 1 / 1;
+      }
+      .offcanvas-title h5 {
+        font-weight: 600;
+        margin-bottom: 0;
+      }
+      .offcanvas-body .nav-link {
+        color: var(--profile-text-light);
+        padding: 12px 16px;
+        font-size: 1.1rem;
+        transition: background-color 0.2s ease;
+        border-radius: 8px; /* Ligeramente redondeado */
+      }
+      .offcanvas-body .nav-link:hover {
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.05
+        ); /* Fondo suave al pasar el ratón */
+        color: var(--app-primary); /* Texto verde en hover */
+      }
+      .offcanvas-body .nav-link i {
+        margin-right: 12px;
+        font-size: 1.3rem;
+      }
+      .offcanvas-body .nav-item.bottom-fixed {
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+        padding: 0 16px;
+      }
 
-      /* --- Nuevos estilos para la pantalla de perfil (Ya existentes y adaptados) --- */
+      /* --- Nuevos estilos para la pantalla de "Ahorro Real" --- */
+      .actual-savings-container {
+        /* display: none; handled by JS */
+      }
+      .actual-savings-container .dashboard-indicators {
+        margin-bottom: 32px;
+      }
+
+      .actual-savings-container .filter-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        justify-content: center;
+      }
+      .actual-savings-container .filter-buttons .btn {
+        border-radius: 20px;
+        padding: 8px 18px;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+      .actual-savings-container .filter-buttons .btn-outline-primary {
+        color: var(--app-primary);
+        border-color: var(--app-primary);
+        background-color: transparent;
+      }
+      .actual-savings-container .filter-buttons .btn-outline-primary.active,
+      .actual-savings-container .filter-buttons .btn-outline-primary:hover {
+        background-color: var(--app-primary);
+        color: var(--app-dark);
+      }
+
+      .history-list-full {
+        max-height: 400px; /* Limita la altura para scroll */
+        overflow-y: auto; /* Habilita el scroll vertical */
+        border-radius: 12px;
+        background-color: var(--profile-card-bg);
+        padding: 15px 0;
+        /* Ocultar la barra de desplazamiento */
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+      }
+      .history-list-full::-webkit-scrollbar {
+        display: none;
+      }
+
+      .history-list-full .history-item-actual-savings {
+        display: flex;
+        align-items: center;
+        padding: 12px 15px; /* Añadir padding horizontal */
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        color: var(--profile-text-light);
+      }
+      .history-list-full .history-item-actual-savings:last-child {
+        border-bottom: none;
+      }
+      .history-item-actual-savings .icon-wrapper {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 15px;
+        flex-shrink: 0;
+      }
+      .history-item-actual-savings .icon-wrapper i {
+        font-size: 1.2rem;
+        color: white;
+      }
+      .history-item-actual-savings .icon-debit {
+        background-color: var(--history-debit-red);
+      }
+      .history-item-actual-savings .icon-credit {
+        background-color: var(--history-credit-green);
+      }
+
+      .history-item-actual-savings .item-details {
+        flex-grow: 1;
+      }
+      .history-item-actual-savings .item-details p {
+        margin-bottom: 2px;
+        font-size: 0.95rem;
+        color: var(--profile-text-light);
+      }
+      .history-item-actual-savings .item-details span {
+        font-size: 0.8rem;
+        color: var(--profile-text-muted);
+      }
+      .history-item-actual-savings .item-amount {
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-left: 15px;
+        flex-shrink: 0;
+      }
+      .history-item-actual-savings .amount-debit {
+        color: var(--history-debit-red);
+      }
+      .history-item-actual-savings .amount-credit {
+        color: var(--history-credit-green);
+      }
+
+      .history-item-actual-savings .action-button-actual-savings {
+        margin-left: 15px;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: all 0.2s ease-in-out;
+        background-color: var(--app-primary);
+        color: var(--app-dark);
+        border: none;
+      }
+      .history-item-actual-savings .action-button-actual-savings:hover {
+        background-color: #aae042;
+      }
+
+      /* --- Estilos ya existentes para la pantalla de perfil --- */
       .profile-container {
-          /* display: none;  Ocultar inicialmente */
-          background-color: var(--profile-bg); /* Fondo principal oscuro de la imagen de referencia */
-          color: var(--profile-text-light); /* Color de texto general claro */
+        /* display: none;  Ocultar inicialmente */
+        background-color: var(
+          --profile-bg
+        ); /* Fondo principal oscuro de la imagen de referencia */
+        color: var(--profile-text-light); /* Color de texto general claro */
       }
 
-      .screen-header { /* Nuevo estilo para el header de pantallas secundarias */
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 24px;
-          padding: 0;
+      .screen-header {
+        /* Nuevo estilo para el header de pantallas secundarias */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        padding: 0;
       }
 
       .screen-header h5 {
-          font-weight: 600;
-          margin-bottom: 0; /* Asegurarse de que no tenga margen inferior */
+        font-weight: 600;
+        margin-bottom: 0; /* Asegurarse de que no tenga margen inferior */
       }
       .screen-header .btn-link {
-          color: var(--profile-text-light); /* Iconos blancos */
-          padding: 0; /* Remover padding por defecto */
+        color: var(--profile-text-light); /* Iconos blancos */
+        padding: 0; /* Remover padding por defecto */
       }
       .screen-header .btn-link:hover {
-          color: var(--app-primary);
+        color: var(--app-primary);
       }
 
       /* Información del perfil */
       .profile-info {
-          text-align: center;
-          margin-bottom: 40px;
+        text-align: center;
+        margin-bottom: 40px;
       }
       .profile-info .profile-avatar {
-          width: 100px;
-          height: 100px;
-          margin: 0 auto 16px auto;
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 16px auto;
       }
       .profile-info .profile-avatar img {
-          border: solid 3px var(--app-primary); /* Borde verde vibrante */
-          object-fit: cover;
-          object-position: center; /* Centrar la imagen en el círculo */
+        border: solid 3px var(--app-primary); /* Borde verde vibrante */
+        object-fit: cover;
+        object-position: top;
+        aspect-ratio: 1 / 1;
       }
       .profile-name {
-          font-weight: 700;
-          color: var(--profile-text-light);
-          font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--profile-text-light);
+        font-size: 1.8rem;
       }
       .profile-id {
-          color: var(--profile-text-muted);
-          font-size: 0.85rem;
+        color: var(--profile-text-muted);
+        font-size: 0.85rem;
       }
 
       /* Secciones generales del perfil */
       .section-title {
-          color: var(--profile-text-light);
-          font-weight: 600;
-          font-size: 1.2rem;
+        color: var(--profile-text-light);
+        font-weight: 600;
+        font-size: 1.2rem;
       }
 
       /* Estilo de las tarjetas dentro del perfil (Dashboard, etc.) */
       .profile-card {
-          background-color: var(--profile-card-bg);
-          border-radius: 12px;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra más oscura */
-          padding: 20px;
-          color: var(--profile-text-light);
+        background-color: var(--profile-card-bg);
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra más oscura */
+        padding: 20px;
+        color: var(--profile-text-light);
       }
-      .profile-card-transparent { /* Para el historial compacto, sin fondo oscuro directo */
-          background-color: transparent;
-          border-radius: 12px;
-          padding: 0;
+      .profile-card-transparent {
+        /* Para el historial compacto, sin fondo oscuro directo */
+        background-color: transparent;
+        border-radius: 12px;
+        padding: 0;
       }
 
       .profile-card .card-label {
-          color: var(--profile-text-muted);
-          font-size: 0.85rem;
-          margin-bottom: 4px;
+        color: var(--profile-text-muted);
+        font-size: 0.85rem;
+        margin-bottom: 4px;
       }
       .profile-card .card-value {
-          font-weight: 700;
-          font-size: 1.3rem;
+        font-weight: 700;
+        font-size: 1.3rem;
+      }
+
+      /* Estilos específicos para los indicadores del Dashboard */
+      .dashboard-indicators {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px; /* Espacio entre los indicadores */
+        flex-wrap: wrap; /* Permitir que los elementos se envuelvan en pantallas pequeñas */
+      }
+
+      .dashboard-indicator-item {
+        flex: 1; /* Permitir que los items crezcan y se distribuyan */
+        min-width: 150px; /* Asegurar un ancho mínimo para cada indicador */
+        background-color: var(
+          --app-dark
+        ); /* Fondo oscuro para cada indicador */
+        border-radius: 12px;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .dashboard-indicator-item .card-label {
+        color: var(--profile-text-muted);
+        font-size: 0.8rem;
+        margin-bottom: 5px;
+      }
+
+      .dashboard-indicator-item .card-value {
+        font-size: 1.6rem; /* Tamaño más grande para los valores */
+        font-weight: 800; /* Más audaz */
+        line-height: 1.2;
+      }
+
+      .dashboard-indicator-item.saved .card-value {
+        color: var(--color-saved-amount); /* Verde para ahorrado */
+      }
+
+      .dashboard-indicator-item.postponed .card-value {
+        color: var(--color-postponed-amount); /* Rojo para pospuesto */
       }
 
       /* Recompensas / Logros */
       .rewards-section .view-all-link {
-          color: var(--profile-text-muted);
-          font-size: 0.9rem;
-          font-weight: 600;
+        color: var(--profile-text-muted);
+        font-size: 0.9rem;
+        font-weight: 600;
       }
 
       .reward-item {
-          padding: 15px;
-          border-radius: 12px;
-          box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-          height: 100px; /* Altura fija para uniformidad */
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        height: 100px; /* Altura fija para uniformidad */
       }
       .reward-item .reward-icon {
-          color: var(--reward-icon-color); /* Color oscuro para los iconos */
+        color: var(--reward-icon-color); /* Color oscuro para los iconos */
       }
       .reward-item p {
-          color: var(--reward-icon-color);
+        color: var(--reward-icon-color);
       }
 
-      .reward-yellow { background-color: var(--achievement-yellow); }
-      .reward-blue { background-color: var(--offers-blue); }
-      .reward-green { background-color: var(--rewards-green); }
-
+      .reward-yellow {
+        background-color: var(--achievement-yellow);
+      }
+      .reward-blue {
+        background-color: var(--offers-blue);
+      }
+      .reward-green {
+        background-color: var(--rewards-green);
+      }
 
       /* Historial de últimos ahorros en el perfil */
       .history-list-compact {
-          max-height: 250px; /* Limita la altura para scroll */
-          overflow-y: auto; /* Habilita el scroll vertical */
-          /* Ocultar la barra de desplazamiento */
-          -ms-overflow-style: none;  /* IE and Edge */
-          scrollbar-width: none;  /* Firefox */
+        max-height: 250px; /* Limita la altura para scroll */
+        overflow-y: auto; /* Habilita el scroll vertical */
+        /* Ocultar la barra de desplazamiento */
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
       }
 
-      .history-list-compact::-webkit-scrollbar { /* Chrome, Safari, Opera */
-          display: none;
+      .history-list-compact::-webkit-scrollbar {
+        /* Chrome, Safari, Opera */
+        display: none;
       }
 
       .history-list-compact .history-item-profile {
-          display: flex;
-          align-items: center;
-          padding: 12px 0;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Separador sutil */
-          color: var(--profile-text-light);
+        display: flex;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Separador sutil */
+        color: var(--profile-text-light);
       }
       .history-list-compact .history-item-profile:last-child {
-          border-bottom: none;
+        border-bottom: none;
       }
 
       .history-item-profile .icon-wrapper {
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-right: 15px;
-          flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 15px;
+        flex-shrink: 0;
       }
 
       .history-item-profile .icon-wrapper i {
-          font-size: 1.2rem;
-          color: white;
+        font-size: 1.2rem;
+        color: white;
       }
 
-      .history-item-profile .icon-debit { /* Para flecha de posponer/no guardado */
-          background-color: var(--history-debit-red);
+      .history-item-profile .icon-debit {
+        /* Para flecha de posponer/no guardado */
+        background-color: var(--history-debit-red);
       }
-      .history-item-profile .icon-credit { /* Para flecha de guardado/ahorro real */
-          background-color: var(--history-credit-green);
+      .history-item-profile .icon-credit {
+        /* Para flecha de guardado/ahorro real */
+        background-color: var(--history-credit-green);
       }
 
       .history-item-profile .item-details {
-          flex-grow: 1;
+        flex-grow: 1;
       }
 
       .history-item-profile .item-details p {
-          margin-bottom: 2px;
-          font-size: 0.95rem;
-          color: var(--profile-text-light);
+        margin-bottom: 2px;
+        font-size: 0.95rem;
+        color: var(--profile-text-light);
       }
       .history-item-profile .item-details span {
-          font-size: 0.8rem;
-          color: var(--profile-text-muted);
+        font-size: 0.8rem;
+        color: var(--profile-text-muted);
       }
       .history-item-profile .item-amount {
-          font-weight: 700;
-          font-size: 1.1rem;
-          margin-left: 15px;
-          flex-shrink: 0;
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-left: 15px;
+        flex-shrink: 0;
       }
       .history-item-profile .amount-debit {
-          color: var(--history-debit-red);
+        color: var(--history-debit-red);
       }
       .history-item-profile .amount-credit {
-          color: var(--history-credit-green);
+        color: var(--history-credit-green);
       }
 
       #viewFullHistoryBtn {
-          color: var(--profile-text-muted);
-          font-weight: 600;
-          font-size: 0.9rem;
-          transition: color 0.2s ease;
+        color: var(--profile-text-muted);
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: color 0.2s ease;
       }
       #viewFullHistoryBtn:hover {
-          color: var(--app-primary);
+        color: var(--app-primary);
       }
     </style>
   </head>
@@ -713,15 +1014,19 @@
 
     <div class="app-container w-100 main-container">
       <div class="header">
-        <div class="avatar">
-          <img src="img_perfil.jpg" alt="imagen de perfil" />
-        </div>
+        <button
+          class="hamburger-button"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasNav"
+          aria-controls="offcanvasNav"
+        >
+          <i class="bi bi-list"></i>
+        </button>
         <div class="header-text">
           <h1 class="h4 mb-1 fw-bold">Bienvenido</h1>
           <p class="small opacity-85 mb-0" id="currentDate">Hoy: 10/5/2025</p>
         </div>
-        <button id="showProfileBtn" class="btn btn-link ms-auto p-0">
-            <i class="bi bi-person-circle fs-4 text-secondary" style="color: var(--profile-text-light) !important;"></i> </button>
       </div>
 
       <div class="datos_ahorro">
@@ -747,7 +1052,10 @@
         </div>
 
         <div class="ahorro text-start">
-          <p>Ahorro Total:</p>
+          <div class="saving-labels">
+            <p class="main-label">Ahorro</p>
+            <p class="sub-label" id="realSavingsLabel">(Ahorro real)</p>
+          </div>
           <h1 id="totalSavings" class="fw-bold mb-3">$0</h1>
           <div class="botones d-flex gap-3">
             <button
@@ -761,12 +1069,6 @@
               class="boton_secundario btn btn-outline-primary flex-grow-1 py-2"
             >
               Historial
-            </button>
-            <button
-              id="showStats"
-              class="boton_secundario btn btn-outline-primary flex-grow-1 py-2"
-            >
-              Estadísticas
             </button>
           </div>
         </div>
@@ -782,13 +1084,13 @@
 
     <div class="app-container w-100 stats-container" id="statsContainer">
       <div class="screen-header">
-          <button class="btn btn-link text-decoration-none" id="backButtonStats">
-              <i class="bi bi-chevron-left fs-4"></i>
-          </button>
-          <h5 class="flex-grow-1 text-center mb-0 text-white">Estadísticas</h5>
-          <button class="btn btn-link text-decoration-none" id="statsOptionsBtn">
-              <i class="bi bi-three-dots-vertical fs-4"></i>
-          </button>
+        <button class="btn btn-link text-decoration-none" id="backButtonStats">
+          <i class="bi bi-chevron-left fs-4"></i>
+        </button>
+        <h5 class="flex-grow-1 text-center mb-0 text-white">Estadísticas</h5>
+        <button class="btn btn-link text-decoration-none" id="statsOptionsBtn">
+          <i class="bi bi-three-dots-vertical fs-4"></i>
+        </button>
       </div>
 
       <div class="ahorro text-start">
@@ -836,8 +1138,7 @@
           <div class="chart-container">
             <div class="chart-controls">
               <h3 class="chart-title">Ahorro Diario</h3>
-              <select id="weekSelector" class="week-selector">
-                </select>
+              <select id="weekSelector" class="week-selector"></select>
             </div>
             <canvas id="dailyChart"></canvas>
             <p class="chart-note">Mostrando últimos 7 días</p>
@@ -857,80 +1158,189 @@
     </div>
 
     <div class="app-container w-100 profile-container" id="profileContainer">
-        <div class="screen-header">
-            <button class="btn btn-link text-decoration-none p-0" id="backToMainFromProfile">
-                <i class="bi bi-chevron-left fs-4"></i>
-            </button>
-            <h5 class="flex-grow-1 text-center mb-0 text-white">Mi Perfil</h5>
-            <button class="btn btn-link text-decoration-none p-0">
-                <i class="bi bi-three-dots-vertical fs-4"></i>
-            </button>
-        </div>
-
-        <div class="profile-info mb-5">
-            <div class="profile-avatar mb-3">
-                <img src="img_perfil.jpg" alt="Imagen de Perfil" class="img-fluid rounded-circle">
-            </div>
-            <h3 class="profile-name mb-1">PAVITHRAN</h3>
-            <p class="profile-id small">ID: 8676113636</p>
-        </div>
-
-        <div class="dashboard-section mb-4">
-            <h4 class="section-title mb-3">Dashboard</h4>
-            <div class="profile-card d-flex align-items-center p-3">
-                <i class="bi bi-wallet2 fs-2 me-3 text-white-50"></i>
-                <div>
-                    <p class="card-label mb-1">Balance de Ahorro (Media Mensual)</p>
-                    <h5 class="card-value" id="monthlyAvgSavings">$0</h5>
-                </div>
-                <div class="ms-auto text-end">
-                    <p class="card-label mb-1">Ahorro Total</p>
-                    <h5 class="card-value" id="totalSavingsProfile">$0</h5>
-                </div>
-            </div>
-        </div>
-
-        <div class="rewards-section mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 class="section-title mb-0">Logros y Recompensas</h4>
-                <a href="#" class="view-all-link small">Ver todo</a>
-            </div>
-            <div class="row row-cols-3 g-3 text-center">
-                <div class="col">
-                    <div class="reward-item reward-yellow p-3 rounded-3 d-flex flex-column justify-content-center align-items-center">
-                        <i class="bi bi-trophy fs-3 reward-icon mb-2"></i>
-                        <p class="mb-0 small fw-bold">Primeros pasos</p>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="reward-item reward-blue p-3 rounded-3 d-flex flex-column justify-content-center align-items-center">
-                        <i class="bi bi-percent fs-3 reward-icon mb-2"></i>
-                        <p class="mb-0 small fw-bold">Ahorro Constante</p>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="reward-item reward-green p-3 rounded-3 d-flex flex-column justify-content-center align-items-center">
-                        <i class="bi bi-tags fs-3 reward-icon mb-2"></i>
-                        <p class="mb-0 small fw-bold">Meta Alcanzada</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="history-section mb-4">
-            <h4 class="section-title mb-3">Últimos Ahorros</h4>
-            <div class="profile-card-transparent p-3">
-                <div id="last10SavingsList" class="history-list-compact">
-                    </div>
-                <div class="d-grid mt-3">
-                    <button id="viewFullHistoryBtn" class="btn btn-link fw-bold">Ver Historial Completo</button>
-                </div>
-            </div>
-        </div>
-
-        <button id="backFromProfileButton" class="back-button w-100 mt-4">
-            Volver a la pantalla principal
+      <div class="screen-header">
+        <button
+          class="btn btn-link text-decoration-none"
+          id="backToMainFromProfile"
+        >
+          <i class="bi bi-chevron-left fs-4"></i>
         </button>
+        <h5 class="flex-grow-1 text-center mb-0 text-white">Mi Perfil</h5>
+        <button class="btn btn-link text-decoration-none p-0">
+          <i class="bi bi-three-dots-vertical fs-4"></i>
+        </button>
+      </div>
+
+      <div class="profile-info mb-5">
+        <div class="profile-avatar mb-3">
+          <img
+            src="img_perfil.png"
+            alt="Imagen de Perfil"
+            class="img-fluid rounded-circle"
+          />
+        </div>
+        <h3 class="profile-name mb-1">PAVITHRAN</h3>
+        <p class="profile-id small">ID: 8676113636</p>
+      </div>
+
+      <div class="dashboard-section mb-4">
+        <h4 class="section-title mb-3">Dashboard</h4>
+        <div class="dashboard-indicators">
+          <div class="dashboard-indicator-item saved">
+            <p class="card-label mb-1">Ahorro Real</p>
+            <h5 class="card-value" id="actualSavings">$0</h5>
+          </div>
+          <div class="dashboard-indicator-item postponed">
+            <p class="card-label mb-1">Pendiente por Ahorrar</p>
+            <h5 class="card-value" id="pendingSavings">$0</h5>
+          </div>
+        </div>
+      </div>
+
+      <div class="rewards-section mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="section-title mb-0">Logros y Recompensas</h4>
+          <a href="#" class="view-all-link small">Ver todo</a>
+        </div>
+        <div class="row row-cols-3 g-3 text-center">
+          <div class="col">
+            <div
+              class="reward-item reward-yellow p-3 rounded-3 d-flex flex-column justify-content-center align-items-center"
+            >
+              <i class="bi bi-trophy fs-3 reward-icon mb-2"></i>
+              <p class="mb-0 small fw-bold">Primeros pasos</p>
+            </div>
+          </div>
+          <div class="col">
+            <div
+              class="reward-item reward-blue p-3 rounded-3 d-flex flex-column justify-content-center align-items-center"
+            >
+              <i class="bi bi-percent fs-3 reward-icon mb-2"></i>
+              <p class="mb-0 small fw-bold">Ahorro Constante</p>
+            </div>
+          </div>
+          <div class="col">
+            <div
+              class="reward-item reward-green p-3 rounded-3 d-flex flex-column justify-content-center align-items-center"
+            >
+              <i class="bi bi-tags fs-3 reward-icon mb-2"></i>
+              <p class="mb-0 small fw-bold">Meta Alcanzada</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="history-section mb-4">
+        <h4 class="section-title mb-3">Últimos Ahorros</h4>
+        <div class="profile-card-transparent p-3">
+          <div id="last10SavingsList" class="history-list-compact"></div>
+          <div class="d-grid mt-3">
+            <button id="viewFullHistoryBtn" class="btn btn-link fw-bold">
+              Ver Historial Completo
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button id="backFromProfileButton" class="back-button w-100 mt-4">
+        Volver a la pantalla principal
+      </button>
+    </div>
+
+    <div
+      class="app-container w-100 actual-savings-container"
+      id="actualSavingsContainer"
+    >
+      <div class="screen-header">
+        <button
+          class="btn btn-link text-decoration-none"
+          id="backButtonActualSavings"
+        >
+          <i class="bi bi-chevron-left fs-4"></i>
+        </button>
+        <h5 class="flex-grow-1 text-center mb-0 text-white">Ahorro Real</h5>
+        <button class="btn btn-link text-decoration-none p-0">
+          <i class="bi bi-three-dots-vertical fs-4"></i>
+        </button>
+      </div>
+
+      <div class="dashboard-section mb-4">
+        <h4 class="section-title mb-3">Resumen de Ahorro</h4>
+        <div class="dashboard-indicators">
+          <div class="dashboard-indicator-item saved">
+            <p class="card-label mb-1">Ahorro Guardado</p>
+            <h5 class="card-value" id="currentActualSavings">$0</h5>
+          </div>
+          <div class="dashboard-indicator-item postponed">
+            <p class="card-label mb-1">Pendiente por Guardar</p>
+            <h5 class="card-value" id="currentPendingSavings">$0</h5>
+          </div>
+        </div>
+      </div>
+
+      <h4 class="section-title mb-3">Historial de Transacciones</h4>
+      <div class="filter-buttons">
+        <button class="btn btn-outline-primary active" id="filterAll">
+          Todos
+        </button>
+        <button class="btn btn-outline-primary" id="filterPostponed">
+          Ahorros Pospuestos
+        </button>
+      </div>
+
+      <div id="fullHistoryList" class="history-list-full"></div>
+
+      <button id="backButtonFromActualSavings" class="back-button w-100 mt-4">
+        Volver
+      </button>
+    </div>
+
+    <div
+      class="offcanvas offcanvas-start"
+      tabindex="-1"
+      id="offcanvasNav"
+      aria-labelledby="offcanvasNavLabel"
+    >
+      <div class="offcanvas-header">
+        <div class="offcanvas-title" id="offcanvasNavLabel">
+          <div class="avatar">
+            <img src="img_perfil.png" alt="Imagen de Perfil" />
+          </div>
+          <h5 class="mb-0">Hola Usuario001</h5>
+        </div>
+        <button
+          type="button"
+          class="btn-close text-reset"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="offcanvas-body d-flex flex-column">
+        <ul class="navbar-nav flex-grow-1">
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="offcanvasProfileBtn">
+              <i class="bi bi-person-fill"></i> Perfil
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="offcanvasStatsBtn">
+              <i class="bi bi-graph-up"></i> Estadísticas
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="offcanvasActualSavingsBtn">
+              <i class="bi bi-wallet-fill"></i> Ahorro Real
+            </a>
+          </li>
+        </ul>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="offcanvasHelpBtn">
+              <i class="bi bi-question-circle-fill"></i> Instrucciones / Ayuda
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
 
     <div class="modal fade history-modal" id="historyModal" tabindex="-1">
@@ -990,107 +1400,245 @@
       </div>
     </div>
 
+    <div
+      class="modal fade"
+      id="helpModal"
+      tabindex="-1"
+      aria-labelledby="helpModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="helpModalLabel">
+              ¡Bienvenido al Reto 365!
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>¿Listo para hacer del ahorro un juego divertido?</p>
+            <p>
+              Con **Reto 365**, cada día es una oportunidad única para guardar
+              dinero. La app sacará una "tarjeta" con un número, ¡ese es el
+              monto que te animamos a ahorrar ese día! Tú decides si lo guardas
+              o lo pospones.
+            </p>
+            <ul>
+              <li>
+                <strong>Saca una tarjeta:</strong> Presiona el botón y descubre
+                cuánto te toca ahorrar hoy.
+              </li>
+              <li>
+                <strong>Ahorra o pospón:</strong> Decide si añades ese monto a
+                tu ahorro real o si lo dejas para después.
+              </li>
+              <li>
+                <strong>Sigue tu progreso:</strong> En tu perfil y estadísticas,
+                verás cuánto has ahorrado en total y qué tienes pendiente.
+              </li>
+            </ul>
+            <p>
+              Nuestro objetivo es que logres tu meta de ahorro de una forma
+              **sencilla, interactiva y dinámica**. ¡Empieza hoy mismo y
+              sorpréndete de lo mucho que puedes ahorrar!
+            </p>
+            <p class="text-center fw-bold mt-4">
+              ¡Ahorrar nunca fue tan emocionante!
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-primary"
+              style="
+                background-color: var(--app-primary);
+                color: var(--app-dark);
+                border: none;
+              "
+              data-bs-dismiss="modal"
+            >
+              ¡Entendido!
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
+      document.addEventListener("DOMContentLoaded", function () {
         // Elementos del DOM
-        const currentDateEl = document.getElementById('currentDate');
-        const progressTextEl = document.getElementById('progressText');
-        const remainingTextEl = document.getElementById('remainingText');
-        const progressBarEl = document.getElementById('progressBar');
-        const totalSavingsEl = document.getElementById('totalSavings');
+        const currentDateEl = document.getElementById("currentDate");
+        const progressTextEl = document.getElementById("progressText");
+        const remainingTextEl = document.getElementById("remainingText");
+        const progressBarEl = document.getElementById("progressBar");
+        const totalSavingsEl = document.getElementById("totalSavings"); // Representa el TOTAL de las tarjetas sacadas (saved + postponed)
+        const realSavingsLabelEl = document.getElementById("realSavingsLabel"); // Nueva etiqueta para "Ahorro real"
         const statsTotalSavingsEl =
-          document.getElementById('statsTotalSavings');
-        const drawCardBtn = document.getElementById('drawCard');
-        const showHistoryBtn = document.getElementById('showHistory');
-        const showStatsBtn = document.getElementById('showStats');
-        const cardDisplayEl = document.getElementById('cardDisplay');
-        const lastNumberEl = document.getElementById('lastNumber');
-        const resetBtn = document.getElementById('resetBtn');
-        const historyListEl = document.getElementById('historyList');
-        const confirmResetBtn = document.getElementById('confirmReset');
+          document.getElementById("statsTotalSavings");
+        const drawCardBtn = document.getElementById("drawCard");
+        const showHistoryBtn = document.getElementById("showHistory");
+        const cardDisplayEl = document.getElementById("cardDisplay");
+        const lastNumberEl = document.getElementById("lastNumber");
+        const resetBtn = document.getElementById("resetBtn");
+        const historyListEl = document.getElementById("historyList"); // Historial para el modal
+        const confirmResetBtn = document.getElementById("confirmReset");
 
         // Contenedores de las pantallas
-        const mainContainer = document.querySelector('.main-container');
-        const statsContainer = document.getElementById('statsContainer');
-        const profileContainer = document.getElementById('profileContainer');
+        const mainContainer = document.querySelector(".main-container");
+        const statsContainer = document.getElementById("statsContainer");
+        const profileContainer = document.getElementById("profileContainer");
+        const actualSavingsContainer = document.getElementById(
+          "actualSavingsContainer"
+        ); // Nuevo contenedor para "Ahorro Real"
 
-        // Botones de navegación entre pantallas
-        const showProfileBtn = document.getElementById('showProfileBtn');
-        const showStatsBtnMain = document.getElementById('showStats'); // Renombrado para evitar conflicto si existe otro
-        const backButtonStats = document.getElementById('backButtonStats'); // Nuevo botón de retroceso en estadísticas
-        const backToMainFromProfileBtn = document.getElementById('backToMainFromProfile');
-        const backFromProfileButton = document.getElementById('backFromProfileButton'); // Botón inferior de volver
+        // Botones de navegación entre pantallas y offcanvas
+        const openOffcanvasBtn = document.querySelector(".hamburger-button");
+        const offcanvasProfileBtn = document.getElementById(
+          "offcanvasProfileBtn"
+        );
+        const offcanvasStatsBtn = document.getElementById("offcanvasStatsBtn");
+        const offcanvasActualSavingsBtn = document.getElementById(
+          "offcanvasActualSavingsBtn"
+        ); // Nuevo botón para Ahorro Real
+        const offcanvasHelpBtn = document.getElementById("offcanvasHelpBtn");
+
+        const backButtonStats = document.getElementById("backButtonStats");
+        const backToMainFromProfileBtn = document.getElementById(
+          "backToMainFromProfile"
+        );
+        const backFromProfileButton = document.getElementById(
+          "backFromProfileButton"
+        );
+        const backButtonActualSavings = document.getElementById(
+          "backButtonActualSavings"
+        ); // Botón de retroceso para Ahorro Real
+        const backButtonFromActualSavings = document.getElementById(
+          "backButtonFromActualSavings"
+        ); // Botón inferior para Ahorro Real
 
         // Nuevos elementos DOM para el perfil y botones de acción
-        const monthlyAvgSavingsEl = document.getElementById('monthlyAvgSavings');
-        const totalSavingsProfileEl = document.getElementById('totalSavingsProfile');
-        const last10SavingsListEl = document.getElementById('last10SavingsList');
-        const viewFullHistoryBtn = document.getElementById('viewFullHistoryBtn');
+        const actualSavingsEl = document.getElementById("actualSavings"); // En pantalla de Perfil (Dashboard)
+        const pendingSavingsEl = document.getElementById("pendingSavings"); // En pantalla de Perfil (Dashboard)
+        const currentActualSavingsEl = document.getElementById(
+          "currentActualSavings"
+        ); // En pantalla de Ahorro Real
+        const currentPendingSavingsEl = document.getElementById(
+          "currentPendingSavings"
+        ); // En pantalla de Ahorro Real
+
+        const last10SavingsListEl =
+          document.getElementById("last10SavingsList"); // Últimos 10 en perfil
+        const viewFullHistoryBtn =
+          document.getElementById("viewFullHistoryBtn");
+
+        // Elementos de filtrado para "Ahorro Real"
+        const filterAllBtn = document.getElementById("filterAll");
+        const filterPostponedBtn = document.getElementById("filterPostponed");
+        const fullHistoryListEl = document.getElementById("fullHistoryList"); // Lista de historial en Ahorro Real
 
         // Nuevos botones de acción "Ahorrar" y "Posponer"
-        const saveButton = document.createElement('button');
-        saveButton.id = 'saveCurrentCard';
-        saveButton.className = 'boton_primario btn btn-primary flex-grow-1 py-2';
-        saveButton.textContent = 'Ahorrar';
+        const saveButton = document.createElement("button");
+        saveButton.id = "saveCurrentCard";
+        saveButton.className =
+          "boton_primario btn btn-primary flex-grow-1 py-2";
+        saveButton.textContent = "Ahorrar";
 
-        const postponeButton = document.createElement('button');
-        postponeButton.id = 'postponeCurrentCard';
-        postponeButton.className = 'boton_secundario btn btn-outline-primary flex-grow-1 py-2';
-        postponeButton.textContent = 'Posponer';
+        const postponeButton = document.createElement("button");
+        postponeButton.id = "postponeCurrentCard";
+        postponeButton.className =
+          "boton_secundario btn btn-outline-primary flex-grow-1 py-2";
+        postponeButton.textContent = "Posponer";
 
         let currentDrawnNumber = null; // Para guardar el número que se acaba de sacar
 
         // Variables para gráficas
         let dailyChart = null;
         let monthlyChart = null;
-        // Nueva variable para controlar la semana seleccionada
         let currentWeek = 0; // 0 = última semana
 
         // Datos de la aplicación
         const cards = Array.from({ length: 365 }, (_, i) => i + 1);
         let remainingCards = [...cards];
-        // Modificación aquí: drawnCards ahora guardará objetos { value: number, saved: boolean, date: string, day: number }
-        let drawnCards = JSON.parse(localStorage.getItem('drawnCards')) || [];
-        let postponedCards = JSON.parse(localStorage.getItem('postponedCards')) || []; // Nuevo array para pospuestos
+        let drawnCards = JSON.parse(localStorage.getItem("drawnCards")) || []; // Tarjetas realmente ahorradas
+        let postponedCards =
+          JSON.parse(localStorage.getItem("postponedCards")) || []; // Tarjetas pospuestas
 
         // Lógica para ocultar splash
-        window.addEventListener('load', () => {
+        window.addEventListener("load", () => {
           setTimeout(() => {
-            document.body.classList.add('loaded');
-            mainContainer.style.display = 'block'; // Mostrar la pantalla principal al finalizar el splash
+            document.body.classList.add("loaded");
+            mainContainer.style.display = "block"; // Mostrar la pantalla principal al finalizar el splash
           }, 2500); // Mantiene el splash por 2.5 segundos
         });
 
         // Modales de Bootstrap
-        const historyModal = new bootstrap.Modal('#historyModal');
-        const confirmModal = new bootstrap.Modal('#confirmModal');
+        const historyModal = new bootstrap.Modal("#historyModal");
+        const confirmModal = new bootstrap.Modal("#confirmModal");
+        const helpModal = new bootstrap.Modal("#helpModal");
+        const offcanvasNav = new bootstrap.Offcanvas("#offcanvasNav"); // Instanciar el offcanvas
 
         // Inicializar aplicación
-        loadProgress(); // Cargar progreso al inicio
+        loadProgress();
         updateDate();
         updateProgress();
-        updateTotalSavings();
+        updateMainScreenSavings(); // Nueva función para la pantalla principal
 
+        // Event Listeners principales
+        drawCardBtn.addEventListener("click", drawCard);
+        showHistoryBtn.addEventListener("click", showHistory);
+        resetBtn.addEventListener("click", () => confirmModal.show());
+        confirmResetBtn.addEventListener("click", resetProgress);
 
-        // Event Listeners
-        drawCardBtn.addEventListener('click', drawCard);
-        showHistoryBtn.addEventListener('click', showHistory);
-        showStatsBtnMain.addEventListener('click', showStats); // Usar showStatsBtnMain
-        resetBtn.addEventListener('click', () => confirmModal.show());
-        confirmResetBtn.addEventListener('click', resetProgress);
-        
-        // Navegación entre pantallas
-        showProfileBtn.addEventListener('click', showProfile);
-        backButtonStats.addEventListener('click', hideStats); // Botón de retroceso de estadísticas
-        backToMainFromProfileBtn.addEventListener('click', hideProfile);
-        backFromProfileButton.addEventListener('click', hideProfile); // Botón inferior de volver desde perfil
-        viewFullHistoryBtn.addEventListener('click', showHistory); // Botón "Ver Historial Completo" del perfil
+        // Navegación Offcanvas
+        offcanvasProfileBtn.addEventListener("click", () => {
+          offcanvasNav.hide();
+          showProfile();
+        });
+        offcanvasStatsBtn.addEventListener("click", () => {
+          offcanvasNav.hide();
+          showStats();
+        });
+        offcanvasActualSavingsBtn.addEventListener("click", () => {
+          offcanvasNav.hide();
+          showActualSavingsScreen();
+        });
+        offcanvasHelpBtn.addEventListener("click", () => {
+          offcanvasNav.hide();
+          helpModal.show();
+        });
+
+        // Navegación de pantallas
+        backButtonStats.addEventListener("click", hideStats);
+        backToMainFromProfileBtn.addEventListener("click", hideProfile);
+        backFromProfileButton.addEventListener("click", hideProfile);
+        backButtonActualSavings.addEventListener(
+          "click",
+          hideActualSavingsScreen
+        );
+        backButtonFromActualSavings.addEventListener(
+          "click",
+          hideActualSavingsScreen
+        );
+        viewFullHistoryBtn.addEventListener("click", showHistory);
 
         // Event Listeners para los nuevos botones de acción
-        saveButton.addEventListener('click', () => handleCardAction(true));
-        postponeButton.addEventListener('click', () => handleCardAction(false));
+        saveButton.addEventListener("click", () => handleCardAction(true));
+        postponeButton.addEventListener("click", () => handleCardAction(false));
+
+        // Event Listeners para filtrar historial en "Ahorro Real"
+        filterAllBtn.addEventListener("click", () =>
+          filterActualSavingsHistory("all")
+        );
+        filterPostponedBtn.addEventListener("click", () =>
+          filterActualSavingsHistory("postponed")
+        );
 
         // Funciones
         function updateDate() {
@@ -1102,7 +1650,6 @@
         }
 
         function updateProgress() {
-          // El progreso se calcula en base a todas las tarjetas que ya fueron "sacadas"
           const drawnCount = drawnCards.length + postponedCards.length;
           const remainingCount = cards.length - drawnCount;
           const progressPercent = (drawnCount / cards.length) * 100;
@@ -1112,255 +1659,336 @@
           progressBarEl.style.width = `${progressPercent}%`;
         }
 
-        function updateTotalSavings() {
-          // El ahorro total solo cuenta los "ahorrados" (saved: true)
-          const total = drawnCards.reduce((sum, item) => sum + item.value, 0);
-          totalSavingsEl.textContent = `$${total.toLocaleString()}`;
-          statsTotalSavingsEl.textContent = `$${total.toLocaleString()}`;
+        function updateMainScreenSavings() {
+          // Ahorro (total de tarjetas sacadas, ya sea ahorradas o pospuestas)
+          const totalDrawnSum =
+            drawnCards.reduce((sum, item) => sum + item.value, 0) +
+            postponedCards.reduce((sum, item) => sum + item.value, 0);
+          totalSavingsEl.textContent = `$${totalDrawnSum.toLocaleString()}`;
+
+          // Ahorro Real (solo las realmente guardadas)
+          const actualTotalSaved = drawnCards.reduce(
+            (sum, item) => sum + item.value,
+            0
+          );
+          realSavingsLabelEl.textContent = `(Ahorro real: $${actualTotalSaved.toLocaleString()})`;
+
+          // Para la pantalla de estadísticas (usa el ahorro real como "Ahorro Total")
+          statsTotalSavingsEl.textContent = `$${actualTotalSaved.toLocaleString()}`;
         }
 
         // Nueva función para gestionar la visibilidad de los botones "Ahorrar" y "Posponer"
         function toggleActionButtons(show) {
-            const botonesDiv = document.querySelector('.ahorro .botones');
-            // Remover botones existentes si están
-            const existingSaveBtn = document.getElementById('saveCurrentCard');
-            const existingPostponeBtn = document.getElementById('postponeCurrentCard');
-            if (existingSaveBtn) botonesDiv.removeChild(existingSaveBtn);
-            if (existingPostponeBtn) botonesDiv.removeChild(existingPostponeBtn);
+          const botonesDiv = document.querySelector(".ahorro .botones");
+          const existingSaveBtn = document.getElementById("saveCurrentCard");
+          const existingPostponeBtn = document.getElementById(
+            "postponeCurrentCard"
+          );
 
-            // Si se debe mostrar el "Sacar Tarjeta" y los otros botones originales
-            if (!show) {
-                drawCardBtn.style.display = 'block';
-                showHistoryBtn.style.display = 'block';
-                showStatsBtnMain.style.display = 'block';
-                botonesDiv.classList.remove('action-buttons'); // Remover clase de botones de acción
-            } else {
-                // Ocultar "Sacar Tarjeta" y mostrar "Ahorrar" y "Posponer"
-                drawCardBtn.style.display = 'none';
-                showHistoryBtn.style.display = 'none';
-                showStatsBtnMain.style.display = 'none';
+          if (existingSaveBtn) botonesDiv.removeChild(existingSaveBtn);
+          if (existingPostponeBtn) botonesDiv.removeChild(existingPostponeBtn);
 
-                botonesDiv.prepend(postponeButton); // Posponer primero
-                botonesDiv.prepend(saveButton); // Ahorrar segundo (para que aparezca primero visualmente)
-                botonesDiv.classList.add('action-buttons'); // Añadir clase para estilos de fila
-            }
+          if (!show) {
+            drawCardBtn.style.display = "block";
+            showHistoryBtn.style.display = "block";
+            // El botón de estadísticas ya no está aquí
+            botonesDiv.classList.remove("action-buttons");
+          } else {
+            drawCardBtn.style.display = "none";
+            showHistoryBtn.style.display = "none";
+            botonesDiv.prepend(postponeButton);
+            botonesDiv.prepend(saveButton);
+            botonesDiv.classList.add("action-buttons");
+          }
         }
 
         function drawCard() {
           if (remainingCards.length === 0) {
-            cardDisplayEl.textContent = '¡Reto completado!';
-            cardDisplayEl.classList.add('bg-primary', 'text-white');
-            lastNumberEl.textContent = ''; // Limpiar mensaje del último número
-            toggleActionButtons(false); // Asegurarse de que no salgan los botones de acción si el reto está completado
+            cardDisplayEl.textContent = "¡Reto completado!";
+            cardDisplayEl.classList.add("bg-primary", "text-white");
+            lastNumberEl.textContent = "";
+            toggleActionButtons(false);
             return;
           }
 
-          toggleActionButtons(true); // Mostrar botones "Ahorrar" y "Posponer"
+          toggleActionButtons(true);
 
           const randomIndex = Math.floor(Math.random() * remainingCards.length);
           const drawnNumber = remainingCards[randomIndex];
-          currentDrawnNumber = drawnNumber; // Guardar el número actual
+          currentDrawnNumber = drawnNumber;
 
           // Animación
-          cardDisplayEl.style.transform = 'scale(0.9)';
+          cardDisplayEl.style.transform = "scale(0.9)";
           setTimeout(() => {
             cardDisplayEl.textContent = `$${drawnNumber}`;
-            cardDisplayEl.style.transform = 'scale(1)';
+            cardDisplayEl.style.transform = "scale(1)";
           }, 200);
 
           lastNumberEl.textContent = `Número sacado: $${drawnNumber}`;
         }
 
         function handleCardAction(saved) {
-            if (currentDrawnNumber === null) return; // No hay número para procesar
+          if (currentDrawnNumber === null) return;
 
-            const actionDate = new Date().toISOString().split('T')[0]; // Fecha actual en formato ISO-MM-DD
-            const dayCounter = drawnCards.length + postponedCards.length + 1; // Día consecutivo del reto
+          const actionDate = new Date().toISOString().split("T")[0];
+          const dayCounter = drawnCards.length + postponedCards.length + 1;
 
-            const newEntry = {
-                value: currentDrawnNumber,
-                saved: saved,
-                date: actionDate,
-                day: dayCounter
-            };
+          const newEntry = {
+            value: currentDrawnNumber,
+            saved: saved,
+            date: actionDate,
+            day: dayCounter,
+          };
 
-            // Eliminar el número del pool de remainingCards
-            remainingCards = remainingCards.filter((n) => n !== currentDrawnNumber);
+          remainingCards = remainingCards.filter(
+            (n) => n !== currentDrawnNumber
+          );
 
-            if (saved) {
-                drawnCards.push(newEntry);
-            } else {
-                postponedCards.push(newEntry);
-            }
+          if (saved) {
+            drawnCards.push(newEntry);
+          } else {
+            postponedCards.push(newEntry);
+          }
 
-            currentDrawnNumber = null; // Reiniciar el número actual
-            cardDisplayEl.textContent = ''; // Limpiar la tarjeta
-            lastNumberEl.textContent = ''; // Limpiar el texto
+          currentDrawnNumber = null;
+          cardDisplayEl.textContent = "";
+          lastNumberEl.textContent = "";
 
-            toggleActionButtons(false); // Volver a mostrar "Sacar Tarjeta" y ocultar los de acción
+          toggleActionButtons(false);
 
-            saveProgress(); // Guardar ambos arrays
-            updateProgress();
-            updateTotalSavings();
+          saveProgress();
+          updateProgress();
+          updateMainScreenSavings(); // Actualizar la pantalla principal
+          // No actualizar perfil o stats aquí, solo cuando se muestren
         }
 
         function showHistory() {
-          historyListEl.innerHTML = '';
-
-          // Combinar todos los elementos y ordenar por día de forma ascendente
-          const allHistoryItems = [...drawnCards, ...postponedCards].sort((a, b) => a.day - b.day);
+          // Este es el modal de historial completo
+          historyListEl.innerHTML = "";
+          const allHistoryItems = [...drawnCards, ...postponedCards].sort(
+            (a, b) => a.day - b.day
+          );
 
           if (allHistoryItems.length === 0) {
             historyListEl.innerHTML =
               '<div class="py-3 text-center text-muted">No hay historial disponible</div>';
           } else {
-            allHistoryItems.forEach((item) => {
-                const iconClass = item.saved ? 'bi-arrow-down-right' : 'bi-arrow-up-left'; // Flecha hacia abajo para ahorrado, hacia arriba para pospuesto
-                const iconBgColor = item.saved ? 'icon-credit' : 'icon-debit';
+            allHistoryItems.forEach((item, index) => {
+              const iconClass = item.saved
+                ? "bi-arrow-down-right"
+                : "bi-arrow-up-left";
+              const iconBgColor = item.saved ? "icon-credit" : "icon-debit";
 
-                const listItem = document.createElement('div');
-                listItem.className = 'history-item';
-                listItem.innerHTML = `
+              const listItem = document.createElement("div");
+              listItem.className = "history-item";
+              listItem.innerHTML = `
                     <div class="icon-wrapper ${iconBgColor}">
                         <i class="bi ${iconClass}"></i>
                     </div>
                     <div class="item-details flex-grow-1">
-                        <p class="mb-0 fw-bold">${item.saved ? 'Ahorro registrado' : 'Ahorro pospuesto'}</p>
-                        <span class="small">${item.date} - Día ${item.day}</span>
+                        <p class="mb-0 fw-bold">${
+                          item.saved ? "Ahorro registrado" : "Ahorro pospuesto"
+                        }</p>
+                        <span class="small">${item.date} - Día ${
+                item.day
+              }</span>
                     </div>
                     <div class="item-amount fw-bold">$${item.value.toLocaleString()}</div>
+                    ${
+                      !item.saved
+                        ? `<button class="action-button btn btn-primary" data-day="${item.day}">Ahorrar</button>`
+                        : ""
+                    }
                 `;
-                historyListEl.appendChild(listItem);
+              historyListEl.appendChild(listItem);
             });
+            historyListEl
+              .querySelectorAll(".action-button")
+              .forEach((button) => {
+                button.addEventListener("click", (event) => {
+                  const dayToSave = parseInt(event.target.dataset.day);
+                  savePostponedItem(dayToSave);
+                });
+              });
           }
-
           historyModal.show();
         }
 
+        function savePostponedItem(dayToSave) {
+          const itemToMoveIndex = postponedCards.findIndex(
+            (pItem) => pItem.day === dayToSave
+          );
+
+          if (itemToMoveIndex > -1) {
+            const itemToMove = postponedCards.splice(itemToMoveIndex, 1)[0];
+            itemToMove.saved = true;
+            drawnCards.push(itemToMove);
+
+            saveProgress();
+            updateProgress();
+            updateMainScreenSavings();
+            updateProfile(); // Re-render profile if visible
+            showHistory(); // Re-open history modal to show updated status
+            updateActualSavingsScreen(); // Re-render actual savings screen if visible
+          }
+        }
+
+        // Funciones de navegación de pantalla
+        function hideAllScreens() {
+          mainContainer.style.display = "none";
+          statsContainer.style.display = "none";
+          profileContainer.style.display = "none";
+          actualSavingsContainer.style.display = "none";
+        }
+
         function showStats() {
-          mainContainer.style.display = 'none';
-          profileContainer.style.display = 'none'; // Asegurarse de ocultar también el perfil
-          statsContainer.style.display = 'block';
+          hideAllScreens();
+          statsContainer.style.display = "block";
           updateCharts();
         }
 
         function hideStats() {
-          statsContainer.style.display = 'none';
-          mainContainer.style.display = 'block';
+          statsContainer.style.display = "none";
+          mainContainer.style.display = "block";
+        }
+
+        function showProfile() {
+          hideAllScreens();
+          profileContainer.style.display = "block";
+          updateProfile();
+        }
+
+        function hideProfile() {
+          profileContainer.style.display = "none";
+          mainContainer.style.display = "block";
+        }
+
+        function showActualSavingsScreen() {
+          // Nueva función para la pantalla de Ahorro Real
+          hideAllScreens();
+          actualSavingsContainer.style.display = "block";
+          filterActualSavingsHistory("all"); // Mostrar todos por defecto al abrir
+        }
+
+        function hideActualSavingsScreen() {
+          actualSavingsContainer.style.display = "none";
+          mainContainer.style.display = "block";
         }
 
         function updateCharts() {
-          // Destruir gráficas existentes si las hay
-          if (dailyChart) {
-            dailyChart.destroy();
-          }
-          if (monthlyChart) {
-            monthlyChart.destroy();
-          }
+          if (dailyChart) dailyChart.destroy();
+          if (monthlyChart) monthlyChart.destroy();
 
-          // dailyData y monthlyData se basarán en los elementos ahorrados de `drawnCards`
           const dailyDataForChart = drawnCards.map((item, index) => ({
-              day: item.day, // Usar el día del reto
-              amount: item.value,
-              date: item.date // Opcional, para tooltips detallados
+            day: item.day,
+            amount: item.value,
+            date: item.date,
           }));
 
-          // Actualizar selector de semanas
           updateWeekSelector(dailyDataForChart.length);
+          const filteredDailyData = filterDataByWeek(
+            dailyDataForChart,
+            currentWeek
+          );
+          const monthlyData = calculateMonthlyData(drawnCards);
 
-          // Filtrar datos según la semana seleccionada
-          const filteredDailyData = filterDataByWeek(dailyDataForChart, currentWeek);
-
-          // Calcular datos mensuales
-          const monthlyData = calculateMonthlyData(drawnCards); // Calcular solo de ahorros reales
-
-          // Crear gráfica diaria
           const dailyCtx = document
-            .getElementById('dailyChart')
-            .getContext('2d');
+            .getElementById("dailyChart")
+            .getContext("2d");
           dailyChart = new Chart(dailyCtx, {
-            type: 'bar',
+            type: "bar",
             data: {
               labels: filteredDailyData.map((item) => `Día ${item.day}`),
               datasets: [
                 {
-                  label: 'Ahorro diario',
+                  label: "Ahorro diario",
                   data: filteredDailyData.map((item) => item.amount),
-                  backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--app-primary'), // Usa la variable CSS
-                  borderColor: getComputedStyle(document.documentElement).getPropertyValue('--app-dark'), // Usa la variable CSS
+                  backgroundColor: getComputedStyle(
+                    document.documentElement
+                  ).getPropertyValue("--app-primary"),
+                  borderColor: getComputedStyle(
+                    document.documentElement
+                  ).getPropertyValue("--app-dark"),
                   borderWidth: 1,
-                  borderRadius: 5, // Bordes redondeados para las barras
+                  borderRadius: 5,
                 },
               ],
             },
             options: {
               responsive: true,
               plugins: {
-                legend: {
-                  display: false,
-                },
+                legend: { display: false },
                 tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return `Ahorro: $${context.parsed.y.toLocaleString()}`;
-                        }
-                    }
-                }
+                  callbacks: {
+                    label: function (context) {
+                      return `Ahorro: $${context.parsed.y.toLocaleString()}`;
+                    },
+                  },
+                },
               },
               scales: {
                 y: {
                   beginAtZero: true,
                   title: {
                     display: true,
-                    text: 'Cantidad ($)',
-                    color: getComputedStyle(document.documentElement).getPropertyValue('--profile-text-light')
+                    text: "Cantidad ($)",
+                    color: getComputedStyle(
+                      document.documentElement
+                    ).getPropertyValue("--profile-text-light"),
                   },
                   ticks: {
-                    callback: function(value, index, values) {
-                      return '$' + value.toLocaleString(); // Formato de moneda
+                    callback: function (value) {
+                      return "$" + value.toLocaleString();
                     },
-                    color: getComputedStyle(document.documentElement).getPropertyValue('--profile-text-muted')
+                    color: getComputedStyle(
+                      document.documentElement
+                    ).getPropertyValue("--profile-text-muted"),
                   },
-                  grid: {
-                    color: 'rgba(255, 255, 255, 0.1)' // Líneas de grid suaves para fondo oscuro
-                  }
+                  grid: { color: "rgba(255, 255, 255, 0.1)" },
                 },
                 x: {
                   title: {
                     display: true,
-                    text: 'Días',
-                    color: getComputedStyle(document.documentElement).getPropertyValue('--profile-text-light')
+                    text: "Días",
+                    color: getComputedStyle(
+                      document.documentElement
+                    ).getPropertyValue("--profile-text-light"),
                   },
                   ticks: {
-                    color: getComputedStyle(document.documentElement).getPropertyValue('--profile-text-muted')
+                    color: getComputedStyle(
+                      document.documentElement
+                    ).getPropertyValue("--profile-text-muted"),
                   },
-                  grid: {
-                    display: false // No mostrar líneas de grid en el eje X
-                  }
+                  grid: { display: false },
                 },
               },
             },
           });
 
-          // Crear gráfica mensual
           const monthlyCtx = document
-            .getElementById('monthlyChart')
-            .getContext('2d');
+            .getElementById("monthlyChart")
+            .getContext("2d");
           monthlyChart = new Chart(monthlyCtx, {
-            type: 'line',
+            type: "line",
             data: {
               labels: monthlyData.map((item) => item.month),
               datasets: [
                 {
-                  label: 'Ahorro mensual',
+                  label: "Ahorro mensual",
                   data: monthlyData.map((item) => item.total),
-                  backgroundColor: 'rgba(163, 255, 66, 0.3)', // Color con opacidad para el área
-                  borderColor: getComputedStyle(document.documentElement).getPropertyValue('--app-primary'), /* Usa el verde para el borde de la línea */
+                  backgroundColor: "rgba(197, 232, 97, 0.3)", // Color con opacidad para el área, basado en el nuevo --app-primary
+                  borderColor: getComputedStyle(
+                    document.documentElement
+                  ).getPropertyValue("--app-primary"),
                   borderWidth: 2,
                   fill: true,
-                  tension: 0.4, // Curvatura de la línea
-                  pointBackgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--app-primary'),
-                  pointBorderColor: getComputedStyle(document.documentElement).getPropertyValue('--profile-bg'), /* Fondo oscuro del punto */
+                  tension: 0.4,
+                  pointBackgroundColor: getComputedStyle(
+                    document.documentElement
+                  ).getPropertyValue("--app-primary"),
+                  pointBorderColor: getComputedStyle(
+                    document.documentElement
+                  ).getPropertyValue("--profile-bg"),
                   pointBorderWidth: 2,
                   pointRadius: 5,
                   pointHoverRadius: 7,
@@ -1370,238 +1998,313 @@
             options: {
               responsive: true,
               plugins: {
-                legend: {
-                  display: false,
-                },
+                legend: { display: false },
                 tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return `Total: $${context.parsed.y.toLocaleString()}`;
-                        }
-                    }
-                }
+                  callbacks: {
+                    label: function (context) {
+                      return `Total: $${context.parsed.y.toLocaleString()}`;
+                    },
+                  },
+                },
               },
               scales: {
                 y: {
                   beginAtZero: true,
                   title: {
                     display: true,
-                    text: 'Total ($)',
-                    color: getComputedStyle(document.documentElement).getPropertyValue('--profile-text-light')
+                    text: "Total ($)",
+                    color: getComputedStyle(
+                      document.documentElement
+                    ).getPropertyValue("--profile-text-light"),
                   },
                   ticks: {
-                    callback: function(value, index, values) {
-                      return '$' + value.toLocaleString(); // Formato de moneda
+                    callback: function (value) {
+                      return "$" + value.toLocaleString();
                     },
-                    color: getComputedStyle(document.documentElement).getPropertyValue('--profile-text-muted')
+                    color: getComputedStyle(
+                      document.documentElement
+                    ).getPropertyValue("--profile-text-muted"),
                   },
-                  grid: {
-                    color: 'rgba(255, 255, 255, 0.1)'
-                  }
+                  grid: { color: "rgba(255, 255, 255, 0.1)" },
                 },
                 x: {
                   title: {
                     display: true,
-                    text: 'Meses',
-                    color: getComputedStyle(document.documentElement).getPropertyValue('--profile-text-light')
+                    text: "Meses",
+                    color: getComputedStyle(
+                      document.documentElement
+                    ).getPropertyValue("--profile-text-light"),
                   },
                   ticks: {
-                    color: getComputedStyle(document.documentElement).getPropertyValue('--profile-text-muted')
+                    color: getComputedStyle(
+                      document.documentElement
+                    ).getPropertyValue("--profile-text-muted"),
                   },
-                  grid: {
-                    display: false
-                  }
+                  grid: { display: false },
                 },
               },
             },
           });
         }
 
-        // Nueva función para actualizar el selector de semanas
         function updateWeekSelector(totalDays) {
-          const weekSelector = document.getElementById('weekSelector');
-          weekSelector.innerHTML = '';
-
+          const weekSelector = document.getElementById("weekSelector");
+          weekSelector.innerHTML = "";
           const totalWeeks = Math.ceil(totalDays / 7);
-
-          // Agregar opción para última semana
-          const lastWeekOption = document.createElement('option');
-          lastWeekOption.value = '0';
-          lastWeekOption.textContent = 'Última semana';
+          const lastWeekOption = document.createElement("option");
+          lastWeekOption.value = "0";
+          lastWeekOption.textContent = "Última semana";
           weekSelector.appendChild(lastWeekOption);
-
-          // Agregar opciones para cada semana
           for (let i = 1; i <= totalWeeks; i++) {
-            const option = document.createElement('option');
+            const option = document.createElement("option");
             option.value = i;
             option.textContent = `Semana ${i}`;
             weekSelector.appendChild(option);
           }
-
-          // Establecer el valor seleccionado
           weekSelector.value = currentWeek;
-
-          // Event listener para cambios en el selector (asegurarse de que solo haya uno)
-          weekSelector.removeEventListener('change', handleWeekChange); // Remover el anterior
-          weekSelector.addEventListener('change', handleWeekChange); // Añadir el nuevo
+          weekSelector.removeEventListener("change", handleWeekChange);
+          weekSelector.addEventListener("change", handleWeekChange);
         }
 
         function handleWeekChange() {
-            currentWeek = parseInt(this.value);
-            updateCharts();
-            updateChartNote();
+          currentWeek = parseInt(this.value);
+          updateCharts();
+          updateChartNote();
         }
 
-        // Función para filtrar datos por semana
         function filterDataByWeek(data, week) {
           if (week === 0) {
-            // Mostrar última semana (últimos 7 días o menos)
             return data.slice(-7);
           } else {
-            // Mostrar semana específica (7 días)
             const startIndex = (week - 1) * 7;
             return data.slice(startIndex, startIndex + 7);
           }
         }
 
-        // Función para actualizar la nota debajo de la gráfica
         function updateChartNote() {
-          const noteElement = document.querySelector('.chart-note');
+          const noteElement = document.querySelector(".chart-note");
           if (currentWeek === 0) {
-            noteElement.textContent = 'Mostrando últimos 7 días';
+            noteElement.textContent = "Mostrando últimos 7 días";
           } else {
             noteElement.textContent = `Mostrando semana ${currentWeek}`;
           }
         }
 
-        // Modificar calculateMonthlyData para usar el nuevo formato de `drawnCards`
         function calculateMonthlyData(cardsArray) {
-            const today = new Date();
-            const currentYear = today.getFullYear();
-            const months = [
-                'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
-                'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
-            ];
+          const today = new Date();
+          const currentYear = today.getFullYear();
+          const months = [
+            "Ene",
+            "Feb",
+            "Mar",
+            "Abr",
+            "May",
+            "Jun",
+            "Jul",
+            "Ago",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dic",
+          ];
+          const monthlyTotals = Array(12).fill(0);
 
-            const monthlyTotals = Array(12).fill(0);
-
-            cardsArray.forEach(item => {
-                if (item.saved) { // Solo cuenta los ahorros reales para los totales mensuales
-                    const itemDate = new Date(item.date); // Parsear la fecha del objeto
-                    const month = itemDate.getMonth(); // 0-11
-                    monthlyTotals[month] += item.value;
-                }
-            });
-
-            return months.map((monthName, index) => ({
-                month: monthName,
-                total: monthlyTotals[index],
-            }));
+          cardsArray.forEach((item) => {
+            if (item.saved) {
+              const itemDate = new Date(item.date);
+              const month = itemDate.getMonth();
+              monthlyTotals[month] += item.value;
+            }
+          });
+          return months.map((monthName, index) => ({
+            month: monthName,
+            total: monthlyTotals[index],
+          }));
         }
 
         function resetProgress() {
-            drawnCards = [];
-            postponedCards = []; // Limpiar pospuestos también
-            remainingCards = [...cards]; // Restaurar todas las tarjetas
-            cardDisplayEl.textContent = '';
-            cardDisplayEl.classList.remove('bg-primary', 'text-white');
-            lastNumberEl.textContent = '';
-            currentDrawnNumber = null; // Reiniciar
-            toggleActionButtons(false); // Volver a mostrar "Sacar Tarjeta"
+          drawnCards = [];
+          postponedCards = [];
+          remainingCards = [...cards];
+          cardDisplayEl.textContent = "";
+          cardDisplayEl.classList.remove("bg-primary", "text-white");
+          lastNumberEl.textContent = "";
+          currentDrawnNumber = null;
+          toggleActionButtons(false);
 
-            saveProgress();
-            updateProgress();
-            updateTotalSavings();
-            if (dailyChart) dailyChart.destroy(); // Destruir gráficos if exist to clear them
-            if (monthlyChart) monthlyChart.destroy();
-            // No llamar updateCharts() directamente aquí, se actualizarán cuando se acceda a la vista de estadísticas
-            // updateProfile(); // Actualizar perfil if visible
+          saveProgress();
+          updateProgress();
+          updateMainScreenSavings();
+          if (dailyChart) dailyChart.destroy();
+          if (monthlyChart) monthlyChart.destroy();
+          updateProfile(); // Actualizar perfil si está visible
+          updateActualSavingsScreen(); // Actualizar Ahorro Real si está visible
 
-            confirmModal.hide();
+          confirmModal.hide();
         }
 
         function saveProgress() {
-            localStorage.setItem('drawnCards', JSON.stringify(drawnCards));
-            localStorage.setItem('postponedCards', JSON.stringify(postponedCards)); // Guardar los pospuestos
+          localStorage.setItem("drawnCards", JSON.stringify(drawnCards));
+          localStorage.setItem(
+            "postponedCards",
+            JSON.stringify(postponedCards)
+          );
         }
 
         function loadProgress() {
-            const storedDrawnCards = localStorage.getItem('drawnCards');
-            if (storedDrawnCards) {
-                drawnCards = JSON.parse(storedDrawnCards);
-            }
-            const storedPostponedCards = localStorage.getItem('postponedCards');
-            if (storedPostponedCards) {
-                postponedCards = JSON.parse(storedPostponedCards);
-            }
+          const storedDrawnCards = localStorage.getItem("drawnCards");
+          if (storedDrawnCards) {
+            drawnCards = JSON.parse(storedDrawnCards);
+          }
+          const storedPostponedCards = localStorage.getItem("postponedCards");
+          if (storedPostponedCards) {
+            postponedCards = JSON.parse(storedPostponedCards);
+          }
 
-            // Reconstruir remainingCards a partir de `cards` y excluyendo lo que ya está en `drawnCards` y `postponedCards`
-            const allUsedNumbers = new Set();
-            drawnCards.forEach(item => allUsedNumbers.add(item.value));
-            postponedCards.forEach(item => allUsedNumbers.add(item.value));
-            remainingCards = cards.filter(card => !allUsedNumbers.has(card));
-        }
-
-        // Nueva función para mostrar la pantalla de perfil
-        function showProfile() {
-            mainContainer.style.display = 'none';
-            statsContainer.style.display = 'none'; // Asegurarse de ocultar también las estadísticas
-            profileContainer.style.display = 'block';
-            updateProfile(); // Cargar los datos del perfil
-        }
-
-        function hideProfile() {
-            profileContainer.style.display = 'none';
-            mainContainer.style.display = 'block';
+          const allUsedNumbers = new Set();
+          drawnCards.forEach((item) => allUsedNumbers.add(item.value));
+          postponedCards.forEach((item) => allUsedNumbers.add(item.value));
+          remainingCards = cards.filter((card) => !allUsedNumbers.has(card));
         }
 
         function updateProfile() {
-            // Calcular balance de ahorro (media por mes)
-            const monthlyData = calculateMonthlyData(drawnCards); // Usar solo drawnCards para el balance de ahorro real
-            let totalMonthlySavings = 0;
-            let monthsWithSavings = 0;
-            monthlyData.forEach(month => {
-                if (month.total > 0) {
-                    totalMonthlySavings += month.total;
-                    monthsWithSavings++;
-                }
-            });
-            const monthlyAvg = monthsWithSavings > 0 ? totalMonthlySavings / monthsWithSavings : 0;
-            monthlyAvgSavingsEl.textContent = `$${monthlyAvg.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+          // Dashboard de ahorro en Perfil
+          const actualTotalSaved = drawnCards.reduce(
+            (sum, item) => sum + item.value,
+            0
+          );
+          const totalPostponed = postponedCards.reduce(
+            (sum, item) => sum + item.value,
+            0
+          );
+          actualSavingsEl.textContent = `$${actualTotalSaved.toLocaleString()}`;
+          pendingSavingsEl.textContent = `$${totalPostponed.toLocaleString()}`;
 
-            // Ahorro total
-            const total = drawnCards.reduce((sum, item) => sum + item.value, 0);
-            totalSavingsProfileEl.textContent = `$${total.toLocaleString()}`;
+          // Últimos 10 ahorros en el Perfil
+          last10SavingsListEl.innerHTML = "";
+          const allHistoryItems = [...drawnCards, ...postponedCards].sort(
+            (a, b) => b.day - a.day
+          );
+          const last10Items = allHistoryItems.slice(0, 10);
 
-            // Últimos 10 ahorros
-            last10SavingsListEl.innerHTML = '';
-            // Combinar todos los elementos y ordenar por día de forma descendente
-            const allHistoryItems = [...drawnCards, ...postponedCards].sort((a, b) => b.day - a.day);
-            const last10Items = allHistoryItems.slice(0, 10);
+          if (last10Items.length === 0) {
+            last10SavingsListEl.innerHTML =
+              '<p class="text-center text-muted small py-3">No hay ahorros recientes.</p>';
+          } else {
+            last10Items.forEach((item) => {
+              const iconClass = item.saved
+                ? "bi-arrow-down-right"
+                : "bi-arrow-up-left";
+              const iconBgColor = item.saved ? "icon-credit" : "icon-debit";
+              const amountColorClass = item.saved
+                ? "amount-credit"
+                : "amount-debit";
 
-            if (last10Items.length === 0) {
-                last10SavingsListEl.innerHTML = '<p class="text-center text-profile-muted small py-3">No hay ahorros recientes.</p>';
-            } else {
-                last10Items.forEach(item => {
-                    const iconClass = item.saved ? 'bi-arrow-down-right' : 'bi-arrow-up-left'; // Flecha abajo para ahorrado, arriba para pospuesto
-                    const iconBgColor = item.saved ? 'icon-credit' : 'icon-debit';
-                    const amountColorClass = item.saved ? 'amount-credit' : 'amount-debit';
-
-                    const listItem = document.createElement('div');
-                    listItem.className = 'history-item-profile d-flex align-items-center';
-                    listItem.innerHTML = `
+              const listItem = document.createElement("div");
+              listItem.className =
+                "history-item-profile d-flex align-items-center";
+              listItem.innerHTML = `
                         <div class="icon-wrapper ${iconBgColor}">
                             <i class="bi ${iconClass}"></i>
                         </div>
                         <div class="item-details">
-                            <p class="mb-0 fw-bold">${item.saved ? 'Ahorro registrado' : 'Ahorro pospuesto'}</p>
-                            <span class="small">${item.date} - Día ${item.day}</span>
+                            <p class="mb-0 fw-bold">${
+                              item.saved
+                                ? "Ahorro registrado"
+                                : "Ahorro pospuesto"
+                            }</p>
+                            <span class="small">${item.date} - Día ${
+                item.day
+              }</span>
                         </div>
                         <div class="item-amount ${amountColorClass}">$${item.value.toLocaleString()}</div>
                     `;
-                    last10SavingsListEl.appendChild(listItem);
+              last10SavingsListEl.appendChild(listItem);
+            });
+          }
+        }
+
+        function updateActualSavingsScreen(filterType = "all") {
+          // Default a 'all'
+          const actualTotalSaved = drawnCards.reduce(
+            (sum, item) => sum + item.value,
+            0
+          );
+          const totalPostponed = postponedCards.reduce(
+            (sum, item) => sum + item.value,
+            0
+          );
+          currentActualSavingsEl.textContent = `$${actualTotalSaved.toLocaleString()}`;
+          currentPendingSavingsEl.textContent = `$${totalPostponed.toLocaleString()}`;
+
+          fullHistoryListEl.innerHTML = "";
+          let itemsToDisplay = [];
+
+          if (filterType === "all") {
+            itemsToDisplay = [...drawnCards, ...postponedCards];
+            filterAllBtn.classList.add("active");
+            filterPostponedBtn.classList.remove("active");
+          } else if (filterType === "postponed") {
+            itemsToDisplay = [...postponedCards];
+            filterPostponedBtn.classList.add("active");
+            filterAllBtn.classList.remove("active");
+          }
+
+          itemsToDisplay.sort((a, b) => a.day - b.day); // Ordenar por día ascendente
+
+          if (itemsToDisplay.length === 0) {
+            fullHistoryListEl.innerHTML =
+              '<p class="text-center text-muted small py-3">No hay registros para mostrar.</p>';
+          } else {
+            itemsToDisplay.forEach((item) => {
+              const iconClass = item.saved
+                ? "bi-arrow-down-right"
+                : "bi-arrow-up-left";
+              const iconBgColor = item.saved ? "icon-credit" : "icon-debit";
+              const amountColorClass = item.saved
+                ? "amount-credit"
+                : "amount-debit";
+
+              const listItem = document.createElement("div");
+              listItem.className =
+                "history-item-actual-savings d-flex align-items-center";
+              listItem.innerHTML = `
+                        <div class="icon-wrapper ${iconBgColor}">
+                            <i class="bi ${iconClass}"></i>
+                        </div>
+                        <div class="item-details">
+                            <p class="mb-0 fw-bold">${
+                              item.saved
+                                ? "Ahorro registrado"
+                                : "Ahorro pospuesto"
+                            }</p>
+                            <span class="small">${item.date} - Día ${
+                item.day
+              }</span>
+                        </div>
+                        <div class="item-amount ${amountColorClass}">$${item.value.toLocaleString()}</div>
+                        ${
+                          !item.saved
+                            ? `<button class="action-button-actual-savings btn btn-primary" data-day="${item.day}">Ahorrar</button>`
+                            : ""
+                        }
+                    `;
+              fullHistoryListEl.appendChild(listItem);
+            });
+
+            fullHistoryListEl
+              .querySelectorAll(".action-button-actual-savings")
+              .forEach((button) => {
+                button.addEventListener("click", (event) => {
+                  const dayToSave = parseInt(event.target.dataset.day);
+                  savePostponedItem(dayToSave);
                 });
-            }
+              });
+          }
+        }
+
+        function filterActualSavingsHistory(filterType) {
+          updateActualSavingsScreen(filterType);
         }
       });
     </script>
